@@ -41,16 +41,46 @@ module.exports.register = validate([
 
 module.exports.login = validate([
   body('email')
-    .notEmpty().withMessage('邮箱不能为空').bail()
-    .isEmail().withMessage('邮箱格式不正确').bail()
-    .custom(async val => {
-      const emailValidate = await User.findOne({
-        email: val
-      })
-      if (!emailValidate) {
-        return Promise.reject('邮箱未注册')
-      }
-    }).bail(),
+  .notEmpty().withMessage('邮箱不能为空').bail()
+  .isEmail().withMessage('邮箱格式不正确').bail()
+  .custom(async val => {
+    const emailValidate = await User.findOne({
+      email: val
+    })
+    if (!emailValidate) {
+      return Promise.reject('邮箱未注册')
+    }
+  }).bail(),
   body('password')
-    .notEmpty().withMessage('密码不能为空').bail()
+  .notEmpty().withMessage('密码不能为空').bail()
+])
+
+module.exports.update = validate([
+  body('email')
+  .custom(async val => {
+    const emailValidate = await User.findOne({
+      email: val
+    })
+    if (emailValidate) {
+      return Promise.reject('邮箱已注册')
+    }
+  }).bail(),
+  body('username')
+  .custom(async val => {
+    const nameValidate = await User.findOne({
+      username: val
+    })
+    if (nameValidate) {
+      return Promise.reject('用户名已存在')
+    }
+  }).bail(),
+  body('phone')
+  .custom(async val => {
+    const phoneValidate = await User.findOne({
+      phone: val
+    })
+    if (phoneValidate) {
+      return Promise.reject('手机号已被注册')
+    }
+  }).bail(),
 ])
