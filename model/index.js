@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
+const { mongopath } = require('../config/config.default')
+
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/express-project')
+  await mongoose.connect(mongopath)
 }
 
 main().then(res => {
