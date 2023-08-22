@@ -5,6 +5,10 @@ const validator = require('../middleware/validator/userValidator')
 const {
   verifyToken
 } = require('../utils/jwt')
+const multer = require('multer')
+const upload = multer({
+  dest: 'public/'
+})
 
 router
   .post('/registers',
@@ -15,6 +19,7 @@ router
     userController.login)
   .get('/lists', verifyToken, userController.list)
   .put('/', verifyToken, validator.update, userController.update)
+  .post('/headimg', verifyToken, upload.single('headimg'), userController.headimg)
   .delete('/', userController.delete)
 
 module.exports = router

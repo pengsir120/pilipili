@@ -4,6 +4,11 @@ const {
 const {
   createToken
 } = require('../utils/jwt')
+const fs = require('fs')
+const {
+  promisify
+} = require('util')
+const rename = promisify(fs.rename)
 
 exports.register = async (req, res) => {
   console.log(req.body);
@@ -44,6 +49,23 @@ exports.update = async (req, res) => {
   res.status(202).json({
     user: dbBack
   })
+}
+
+exports.headimg = async (req, res) => {
+  console.log(req.file);
+  const fileArr = req.file.originalname.split('.')
+  const fileType = fileArr[fileArr.length - 1]
+
+  try {
+    await rename(`./public/${req.file.filename}`, `./public/${req.file.filename}.${fileType}`)
+    res.status(202).json({
+      filepath: `${req.file.filename}.${fileType}`
+    })
+  } catch (error) {
+    res.status(500).json({
+      errors: error
+    })
+  }
 }
 
 exports.delete = async (req, res) => {
