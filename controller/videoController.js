@@ -9,8 +9,15 @@ exports.videolist = async (req, res) => {
     .skip((pageNum - 1) * pageSize)
     .limit(pageSize)
     .sort({createAt: -1})
+    .populate('user', '_id, cover, username')
   const total = await Video.countDocuments()
   res.status(200).json({videolist, total})
+}
+
+exports.video = async (req, res) => {
+  const { videoId } = req.params
+  const videoInfo = await Video.findById(videoId).populate('user', '_id, cover, username')
+  res.status(200).json(videoInfo)
 }
 
 exports.createvideo = async (req, res) => {

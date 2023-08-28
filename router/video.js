@@ -8,7 +8,8 @@ const {
 } = require('../utils/jwt')
 
 router
-  .get('/videolist', verifyToken, videoController.videolist)
-  .get('/getvod', verifyToken, vodController.getvod)
-  .post('/createvideo', verifyToken, validator.video, videoController.createvideo)
+  .get('/videolist', videoController.videolist)
+  .get('/video/:videoId', verifyToken(), videoController.video)
+  .get('/getvod', verifyToken(), vodController.getvod)
+  .post('/createvideo', verifyToken(), validator.video, videoController.createvideo)
 module.exports = router

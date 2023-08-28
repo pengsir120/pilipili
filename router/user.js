@@ -17,9 +17,9 @@ router
   .post('/logins',
     validator.login,
     userController.login)
-  .get('/lists', verifyToken, userController.list)
-  .put('/', verifyToken, validator.update, userController.update)
-  .post('/headimg', verifyToken, upload.single('headimg'), userController.headimg)
+  .get('/lists', verifyToken(), userController.list)
+  .put('/', verifyToken(), validator.update, userController.update)
+  .post('/headimg', verifyToken(), upload.single('headimg'), userController.headimg)
   .delete('/', userController.delete)
 
 module.exports = router
