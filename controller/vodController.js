@@ -1,4 +1,5 @@
 const RPCClient = require('@alicloud/pop-core').RPCClient
+const { accessKeyId, accessKeySecret } = require('../config/config.default')
 
 function initVodClient(accessKeyId, accessKeySecret) {
   const regionId = 'cn-shanghai'
@@ -13,10 +14,7 @@ function initVodClient(accessKeyId, accessKeySecret) {
 
 exports.getvod = async (req, res) => {
   // 请求示例
-  const client = initVodClient(
-    'LTAI5tAd5KhnbWMcKvkHERmV',
-    'givJX3wc8QXuBpQ5R5LHXdzzvZjxaC'
-  )
+  const client = initVodClient(accessKeyId, accessKeySecret)
 
   const vodback = await client.request('CreateUploadVideo', {
     Title: 'this is a sample',

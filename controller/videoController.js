@@ -2,8 +2,15 @@ const {
   Video
 } = require("../model")
 
-exports.list = async (req, res) => {
-
+exports.videolist = async (req, res) => {
+  const { pageNum = 1, pageSize = 10 } = req.query
+  const videolist = await Video
+    .find()
+    .skip((pageNum - 1) * pageSize)
+    .limit(pageSize)
+    .sort({createAt: -1})
+  const total = await Video.countDocuments()
+  res.status(200).json({videolist, total})
 }
 
 exports.createvideo = async (req, res) => {
