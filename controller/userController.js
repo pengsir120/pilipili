@@ -9,6 +9,26 @@ const {
   promisify
 } = require('util')
 const rename = promisify(fs.rename)
+const _ = require('loadsh')
+
+exports.getuser = async (req, res) => {
+  let isSubscribe = false
+  if(req.user) {
+    const subscribeRecord = await Subscribe.findOne({
+      user: req.user._id,
+      channel: req.params.userId
+    })
+    if(subscribeRecord) {
+      isSubscribe = true
+    }
+  }
+
+  const channel = await User.findById(req.params.userId)
+  res.status(200).json({
+    ..._.pick(channel, ['_id', 'username', 'image', 'cover', 'subscribeCount', 'channeldes']),
+    isSubscribe
+  })
+}
 
 exports.unsubscribe = async (req, res) => {
   const userId = req.user._id
