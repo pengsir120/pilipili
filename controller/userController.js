@@ -1,5 +1,5 @@
 const {
-  User
+  User, Subscribe
 } = require('../model/index')
 const {
   createToken
@@ -9,6 +9,54 @@ const {
   promisify
 } = require('util')
 const rename = promisify(fs.rename)
+
+exports.unsubscribe = async (req, res) => {
+  const userId = req.user._id
+  const channelId = req.params.userId
+  if(userId == channelId) {
+    return res.status(401).json({err: '不能取消关注自己'})
+  }
+  const subscribeRecord = await Subscribe.findOne({
+    user: userId,
+    channel: channelId
+  })
+  if(subscribeRecord) {
+    await Subscribe.deleteOne({
+      user: userId,
+      channel: channelId
+    })
+    const user = await User.findById(channelId)
+    user.subscribeCount--
+    await user.save()
+    res.status(200).json({user, msg: '取消关注成功'})    
+  }else {
+    res.status(401).json({err: '没有关注过'})
+  }
+}
+
+exports.subscribe = async (req, res) => {
+  const userId = req.user._id
+  const channelId = req.params.userId
+  if(userId == channelId) {
+    return res.status(401).json({err: '不能关注自己'})
+  }
+  const subscribeRecord = await Subscribe.findOne({
+    user: userId,
+    channel: channelId
+  })
+  if(!subscribeRecord) {
+    await new Subscribe({
+      user: userId,
+      channel: channelId
+    }).save()
+    const user = await User.findById(channelId)
+    user.subscribeCount++
+    await user.save()
+    res.status(200).json({msg: '关注成功'})    
+  }else {
+    res.status(401).json({err: '已经关注了'})
+  }
+}
 
 exports.register = async (req, res) => {
   console.log(req.body);

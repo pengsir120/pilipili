@@ -18,6 +18,8 @@ router
     validator.login,
     userController.login)
   .get('/lists', verifyToken(), userController.list)
+  .get('/unsubscribe/:userId', verifyToken(), userController.unsubscribe)
+  .get('/subscribe/:userId', verifyToken(), userController.subscribe)
   .put('/', verifyToken(), validator.update, userController.update)
   .post('/headimg', verifyToken(), upload.single('headimg'), userController.headimg)
   .delete('/', userController.delete)
