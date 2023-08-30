@@ -11,6 +11,8 @@ const upload = multer({
 })
 
 router
+  .get('/getchannel', verifyToken(), userController.getchannel)
+  .get('/getsubscribe/:userId', userController.getsubscribe)
   .get('/getuser/:userId', verifyToken(false), userController.getuser)
   .get('/unsubscribe/:userId', verifyToken(), userController.unsubscribe)
   .get('/subscribe/:userId', verifyToken(), userController.subscribe)
