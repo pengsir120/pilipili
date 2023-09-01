@@ -1,38 +1,51 @@
 const {
-  Video, Videocomment
+  Video,
+  Videocomment
 } = require("../model")
 
 exports.comment = async (req, res) => {
-  const { videoId } = req.params
+  const {
+    videoId
+  } = req.params
   const videoInfo = await Video.findById(videoId)
-  if(!videoInfo) {
-    return res.status(401).json({err: '视频不存在'})
+  if (!videoInfo) {
+    return res.status(404).json({
+      err: '视频不存在'
+    })
   }
-  const comment = new Videocomment({
+  const comment = await new Videocomment({
     content: req.body.content,
-    video: videoInfo._id,
+    video: videoId,
     user: req.user._id
-  })
-  await comment.save()
+  }).save()
   videoInfo.commentCount++
   await videoInfo.save()
-  res.status(200).json(comment)
+  res.status(201).json(comment)
 }
 
 exports.videolist = async (req, res) => {
-  const { pageNum = 1, pageSize = 10 } = req.query
+  const {
+    pageNum = 1, pageSize = 10
+  } = req.query
   const videolist = await Video
     .find()
     .skip((pageNum - 1) * pageSize)
     .limit(pageSize)
-    .sort({createAt: -1})
+    .sort({
+      createAt: -1
+    })
     .populate('user', '_id, cover, username')
   const total = await Video.countDocuments()
-  res.status(200).json({videolist, total})
+  res.status(200).json({
+    videolist,
+    total
+  })
 }
 
 exports.video = async (req, res) => {
-  const { videoId } = req.params
+  const {
+    videoId
+  } = req.params
   const videoInfo = await Video.findById(videoId).populate('user', '_id, cover, username')
   res.status(200).json(videoInfo)
 }
