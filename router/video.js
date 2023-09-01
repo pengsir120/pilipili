@@ -8,6 +8,7 @@ const {
 } = require('../utils/jwt')
 
 router
+  .post('/comment/:videoId', verifyToken(), videoController.comment)
   .get('/videolist', videoController.videolist)
   .get('/video/:videoId', verifyToken(), videoController.video)
   .get('/getvod', verifyToken(), vodController.getvod)
