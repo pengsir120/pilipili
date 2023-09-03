@@ -1,8 +1,28 @@
 const {
   Video,
   Videocomment,
-  Videolike
+  Videolike,
+  Subscribe
 } = require("../model")
+
+exports.likelist = async (req, res) => {
+  const userId = req.user._id
+  const {
+    pageNum = 1, pageSize = 10
+  } = req.body
+  const likelist = await Videolike.find({
+    user: userId,
+    like: 1
+  }).skip((pageNum - 1) * pageSize).limit(pageSize).populate('video', '_id title cover vodvideoId commentCount likeCount dislikeCount user')
+  const likeCount = await Videolike.countDocuments({
+    user: userId,
+    like: 1
+  })
+  res.status(200).json({
+    likelist,
+    likeCount
+  })
+}
 
 exports.dislikevideo = async (req, res) => {
   const {
@@ -189,7 +209,35 @@ exports.video = async (req, res) => {
   const {
     videoId
   } = req.params
-  const videoInfo = await Video.findById(videoId).populate('user', '_id, cover, username')
+  let videoInfo = await Video.findById(videoId).populate('user', '_id, cover, username')
+  videoInfo = videoInfo.toJSON()
+  videoInfo.islike = false
+  videoInfo.isDislike = false
+  videoInfo.isSubscribe = false
+  if (req.user) {
+    const userId = req.user._id
+    if (await Videolike.findOne({
+        user: userId,
+        video: videoId,
+        like: 1
+      })) {
+      videoInfo.islike = true
+    }
+    if (await Videolike.findOne({
+        user: userId,
+        video: videoId,
+        like: -1
+      })) {
+      videoInfo.isDislike = true
+    }
+    if (await Subscribe.findOne({
+        user: userId,
+        channel: videoInfo.user
+      })) {
+      videoInfo.isSubscribe = true
+    }
+  }
+
   res.status(200).json(videoInfo)
 }
 
