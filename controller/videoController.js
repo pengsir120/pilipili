@@ -1,7 +1,96 @@
 const {
   Video,
-  Videocomment
+  Videocomment,
+  Videolike
 } = require("../model")
+
+exports.dislikevideo = async (req, res) => {
+  const {
+    videoId
+  } = req.params
+  const userId = req.user._id
+  const video = await Video.findById(videoId)
+  if (!video) {
+    return res.status(404).json({
+      err: '视频不存在'
+    })
+  }
+  const doc = await Videolike.findOne({
+    user: userId,
+    video: videoId
+  })
+  let isdislike = true
+  if (doc && doc.like === -1) {
+    await doc.deleteOne()
+    isdislike = false
+  } else if (doc && doc.like === 1) {
+    doc.like = -1
+    await doc.save()
+  } else {
+    await new Videolike({
+      user: userId,
+      video: videoId,
+      like: -1
+    }).save()
+  }
+  video.likeCount = await Videolike.countDocuments({
+    video: videoId,
+    like: 1,
+  })
+  video.dislikeCount = await Videolike.countDocuments({
+    video: videoId,
+    like: -1,
+  })
+  await video.save()
+  res.status(200).json({
+    ...video.toJSON(),
+    isdislike
+  })
+}
+
+exports.likevideo = async (req, res) => {
+  const {
+    videoId
+  } = req.params
+  const userId = req.user._id
+  const video = await Video.findById(videoId)
+  if (!video) {
+    return res.status(404).json({
+      err: '视频不存在'
+    })
+  }
+  const doc = await Videolike.findOne({
+    user: userId,
+    video: videoId
+  })
+  let islike = true
+  if (doc && doc.like === 1) {
+    await doc.deleteOne()
+    islike = false
+  } else if (doc && doc.like === -1) {
+    doc.like = 1
+    await doc.save()
+  } else {
+    await new Videolike({
+      user: userId,
+      video: videoId,
+      like: 1
+    }).save()
+  }
+  video.likeCount = await Videolike.countDocuments({
+    video: videoId,
+    like: 1,
+  })
+  video.dislikeCount = await Videolike.countDocuments({
+    video: videoId,
+    like: -1,
+  })
+  await video.save()
+  res.status(200).json({
+    ...video.toJSON(),
+    islike
+  })
+}
 
 exports.deletecomment = async (req, res) => {
   const {
