@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const md5 = require('../utils/md5')
 const baseModel = require('./baseModel')
 
 const userSchema = new mongoose.Schema({
@@ -15,29 +14,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     set: value => md5(value),
-    select: false // 查询的时候不返回
+    select: false
   },
-  phone: {
-    type: String,
-    required: true
-  },
-  image: {
-    type: String,
-    default: null
-  },
-  cover: {
-    type: String,
-    default: null
-  },
-  channeldes: {
-    type: String,
-    default: null
-  },
-  subscribeCount: {
-    type: Number,
-    default: 0,
-  },
-  ...baseModel,
+  ...baseModel
 })
 
 module.exports = userSchema

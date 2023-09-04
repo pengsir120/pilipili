@@ -1,18 +1,18 @@
-const express = require('express')
-const cors = require('cors')
-const morgan = require('morgan')
+const Koa = require('koa')
+const { koaBody } = require('koa-body')
 const router = require('./router')
+const cors = require('@koa/cors')
 
-const app = express()
-
-app.use(express.json())
-app.use(express.urlencoded())
-app.use(express.static('public'))
+const app = new Koa()
 app.use(cors())
-app.use(morgan('dev'))
-app.use('/api/v1', router)
+app.use(koaBody())
+app.use(router.routes())
 
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+app.on('error', (err, ctx) => {
+  console.log(err);
+  ctx.body = 'Server Err' + err
+})
+
+app.listen(3000, () => {
+  console.log('http://127.0.0.1:3000');
 })
