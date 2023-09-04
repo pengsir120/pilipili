@@ -6,5 +6,5 @@ module.exports = {
   updateAt: {
     type: Date,
     default: Date.now()
-  }
+  },
 }
