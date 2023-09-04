@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const baseModel = require('./baseModel')
+const md5 = require('../utils/md5')
 
 const userSchema = new mongoose.Schema({
   username: {
