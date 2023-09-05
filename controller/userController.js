@@ -1,7 +1,44 @@
 const { User, Subscribe } = require('../model')
 const { createToken } = require('../utils/jwt')
 
-module.exports.getuser = async (ctx, next) => {
+module.exports.subscribe = async ctx => {
+  const userId = ctx.user.userInfo._id
+  const subscribeId = ctx.params.subscribeId
+  if(userId == subscribeId) {
+    return ctx.throw(403, '不能关注自己')
+  }
+  const subscribe = await Subscribe.findOne({
+    user: userId,
+    channel: subscribeId
+  })
+  if(subscribe) {
+    return ctx.throw(403, '已经关注了')
+  }else {
+    const subscribeDb = await new Subscribe({
+      user: userId,
+      channel: subscribeId
+    }).save()
+    if(subscribeDb) {
+      let subscribeUser = await User.findById(subscribeId, [
+        'username',
+        'image',
+        'cover',
+        'channeldes',
+        'subscribeCount'
+      ])
+      subscribeUser.subscribeCount++
+      await subscribeUser.save()
+      ctx.body = {
+        subscribeUser,
+        msg: '关注成功'
+      }
+    }else {
+      return ctx.throw(501, '关注失败')
+    }
+  }
+}
+
+module.exports.getuser = async ctx => {
   const channel = ctx.params.userId
   const userId = ctx.user ? ctx.user.userInfo._id : null
   let isSubscribe = false
@@ -18,7 +55,8 @@ module.exports.getuser = async (ctx, next) => {
     'username',
     'image',
     'cover',
-    'channeldes'
+    'channeldes',
+    'subscribeCount'
   ])
   channelInfo = channelInfo._doc
   channelInfo.isSubscribe = isSubscribe
@@ -26,7 +64,7 @@ module.exports.getuser = async (ctx, next) => {
   ctx.body = channelInfo
 }
 
-module.exports.login = async (ctx, next) => {
+module.exports.login = async ctx=> {
   const dbBack = await User.findOne(ctx.request.body)
   if(!dbBack) {
     return ctx.throw(402, '邮箱或密码不正确')
@@ -36,13 +74,13 @@ module.exports.login = async (ctx, next) => {
   ctx.body = dbBack._doc
 }
 
-module.exports.register = async (ctx, next) => {
+module.exports.register = async ctx => {
   const userModel = new User(ctx.request.body)
   const dbBack = await userModel.save()
   ctx.body = dbBack
 }
 
-module.exports.index = async (ctx, next) => {
+module.exports.index = async ctx => {
   const user = await User.findById(ctx.params.userId)
   ctx.body = user
 }
