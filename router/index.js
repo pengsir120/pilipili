@@ -5,12 +5,10 @@ const userController = require('../controller/userController')
 const { registerValidate, loginValidate } = require('../middleware/userValidate')
 const { verifyToken } = require('../utils/jwt')
 
-const verify = verifyToken()
-
 router
 .post('/user/login', loginValidate, userController.login)
 .post('/user/register', registerValidate, userController.register)
-.get('/user/getuser', verify, userController.getuser)
+.get('/user/getuser/:userId', verifyToken(false), userController.getuser)
 // .get('/user/:userId', userController.index)
 
 module.exports = router

@@ -1,8 +1,29 @@
-const { User } = require('../model')
+const { User, Subscribe } = require('../model')
 const { createToken } = require('../utils/jwt')
 
 module.exports.getuser = async (ctx, next) => {
-  ctx.body = ctx.user
+  const channel = ctx.params.userId
+  const userId = ctx.user ? ctx.user.userInfo._id : null
+  let isSubscribe = false
+  if(userId) {
+    const subscribe = await Subscribe.findOne({
+      user: userId,
+      channel
+    })
+    if(subscribe) {
+      isSubscribe = true
+    }
+  }
+  let channelInfo = await User.findById(channel, [
+    'username',
+    'image',
+    'cover',
+    'channeldes'
+  ])
+  channelInfo = channelInfo._doc
+  channelInfo.isSubscribe = isSubscribe
+
+  ctx.body = channelInfo
 }
 
 module.exports.login = async (ctx, next) => {
