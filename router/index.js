@@ -6,6 +6,7 @@ const { registerValidate, loginValidate } = require('../middleware/userValidate'
 const { verifyToken } = require('../utils/jwt')
 
 router
+.get('/user/subscribelist', verifyToken(), userController.subscribelist)
 .get('/user/subscribe/:subscribeId', verifyToken(), userController.subscribe)
 .post('/user/login', loginValidate, userController.login)
 .post('/user/register', registerValidate, userController.register)

@@ -1,6 +1,14 @@
 const { User, Subscribe } = require('../model')
 const { createToken } = require('../utils/jwt')
 
+module.exports.subscribelist = async ctx => {
+  const userId = ctx.user.userInfo._id
+  const subscribelist = await Subscribe.find({
+    user: userId
+  }).populate('channel', ['username', 'image', 'channeleds', 'subscribeCount'])
+  ctx.body = subscribelist
+}
+
 module.exports.subscribe = async ctx => {
   const userId = ctx.user.userInfo._id
   const subscribeId = ctx.params.subscribeId
