@@ -19,5 +19,6 @@ router
 // 视频管理模块
 router.get('/video/getvod', verifyToken(), vodController.getvod)
 router.post('/video/createvideo', verifyToken(), videoController.createVideo)
+router.get('/video/getvodplay', vodController.getPlay)
 
 module.exports = router
