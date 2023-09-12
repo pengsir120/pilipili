@@ -20,5 +20,6 @@ router
 router.get('/video/getvod', verifyToken(), vodController.getvod)
 router.post('/video/createvideo', verifyToken(), videoController.createVideo)
 router.get('/video/getvodplay', vodController.getPlay)
+router.get('/video/videolist/:userId', videoController.videolist)
 
 module.exports = router
