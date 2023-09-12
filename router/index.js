@@ -2,6 +2,7 @@ const Router = require('@koa/router')
 const router = new Router({prefix: '/api/v1'})
 const userController = require('../controller/userController')
 const vodController = require('../controller/vodController')
+const videoController = require('../controller/videoController')
 
 const { registerValidate, loginValidate } = require('../middleware/userValidate')
 const { verifyToken } = require('../utils/jwt')
@@ -17,5 +18,6 @@ router
 
 // 视频管理模块
 router.get('/video/getvod', verifyToken(), vodController.getvod)
+router.post('/video/createvideo', verifyToken(), videoController.createVideo)
 
 module.exports = router
