@@ -1,4 +1,5 @@
 const { Video } = require('../model')
+const { getvodPlay } = require('../controller/vodController')
 
 module.exports.createVideo = async ctx => {
   const body = ctx.request.body
@@ -29,4 +30,24 @@ module.exports.videolist = async ctx => {
     'subscribeCount'
   ])
   ctx.body = videolist
+}
+
+module.exports.getVideo = async ctx => {
+  const videoId = ctx.request.params.videoId
+  let videoInfo = await Video.findById(videoId)
+  .populate('user', [
+    'cover',
+    'username',
+    'image',
+    'channeldes',
+    'subscribeCount'
+  ])
+  videoInfo = videoInfo._doc
+  if(videoInfo) {
+    const vodInfo = await getvodPlay(videoInfo.vodvideoId)
+    videoInfo.vod = vodInfo
+    ctx.body = videoInfo
+  }else {
+    ctx.throw(501, '视频不存在')
+  }
 }

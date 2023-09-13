@@ -28,14 +28,21 @@ exports.getvod = async ctx => {
   }
 }
 
-exports.getPlay = async ctx => {
+const getvodPlay = async (vodId) => {
   const client = initVodClient(accessKeyId, accessKeySecret)
   try {
     const response = await client.request('GetPlayInfo', {
-      VideoId: '2f8df42048a571ee92446732b68f0102'
+      VideoId: vodId
     }, {})
-    ctx.body = response
+    return response
   } catch (error) {
     console.log(error);
   }
 }
+
+exports.getPlay = async ctx => {
+  const play = await getvodPlay(ctx.request.query.vodId)
+  ctx.body = play
+}
+
+module.exports.getvodPlay = getvodPlay
