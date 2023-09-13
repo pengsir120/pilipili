@@ -22,5 +22,6 @@ router.post('/video/createvideo', verifyToken(), videoController.createVideo)
 router.get('/video/getvodplay', vodController.getPlay)
 router.get('/video/videolist/:userId', videoController.videolist)
 router.get('/video/getvideo/:videoId', videoController.getVideo)
+router.post('/video/createcomment/:videoId', verifyToken(), videoController.createComment)
 
 module.exports = router
