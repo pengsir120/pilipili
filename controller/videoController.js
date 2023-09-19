@@ -5,8 +5,14 @@ const {
   Subscribe,
   CollectModel,
 } = require("../model")
-const { hotInc } = require('../model/redis/redishotsinc')
+const { hotInc, topHots } = require('../model/redis/redishotsinc')
 // 观看 +1 点赞 +2 评论 +2 收藏 +3
+
+exports.getHots = async (req, res) => {
+  const { topnum } = req.params
+  const tops = await topHots(topnum)
+  res.status(200).json({tops})
+}
 
 exports.collect = async (req, res) => {
   const { videoId } = req.params
