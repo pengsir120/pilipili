@@ -2,8 +2,36 @@ const {
   Video,
   Videocomment,
   Videolike,
-  Subscribe
+  Subscribe,
+  CollectModel,
 } = require("../model")
+
+exports.collect = async (req, res) => {
+  const { videoId } = req.params
+  const userId = req.user._id
+  const video = await Video.findById(videoId)
+  if(!video) {
+    return res.status(404).json({
+      err: '视频不存在'
+    })
+  }
+  const doc = await CollectModel.findOne({
+    user: userId,
+    video: videoId
+  })
+  if(doc) {
+    return res.status(403).json({
+      err: '已经收藏了'
+    })
+  }
+  const mycollect = await new CollectModel({
+    user: userId,
+    video: videoId
+  }).save()
+  res.status(201).json({
+    mycollect
+  })
+}
 
 exports.likelist = async (req, res) => {
   const userId = req.user._id

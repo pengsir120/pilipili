@@ -8,6 +8,7 @@ const {
 } = require('../utils/jwt')
 
 router
+  .get('/collect/:videoId', verifyToken(), videoController.collect)
   .get('/likelist', verifyToken(), videoController.likelist)
   .get('/dislike/:videoId', verifyToken(), videoController.dislikevideo)
   .get('/like/:videoId', verifyToken(), videoController.likevideo)
