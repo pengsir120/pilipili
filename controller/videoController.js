@@ -7,15 +7,12 @@ const {
 } = require("../model")
 const { hotInc, topHots } = require('../model/redis/redishotsinc')
 // 观看 +1 点赞 +2 评论 +2 收藏 +3
+const { getvodPlay } = require('../controller/vodController')
 
 exports.getHots = async (req, res) => {
   const { topnum } = req.params
   const tops = await topHots(topnum)
   res.status(200).json({tops})
-}
-
-exports.getPlay = async (req, res) => {
-  
 }
 
 exports.collect = async (req, res) => {
@@ -257,8 +254,23 @@ exports.video = async (req, res) => {
   const {
     videoId
   } = req.params
-  let videoInfo = await Video.findById(videoId).populate('user', '_id, cover, username')
+  let videoInfo = await Video.findById(videoId).populate('user', [
+    'cover', 
+    'username',
+    'image',
+    'channeldes',
+    'subscribeCount'
+  ])
   videoInfo = videoInfo.toJSON()
+  if(videoInfo) {
+    const vodInfo = await getvodPlay(videoInfo.vodvideoId)
+    videoInfo.vod = vodInfo
+  }else {
+    return res.status(501).json({
+      err: '视频不存在'
+    })
+  }
+
   videoInfo.islike = false
   videoInfo.isDislike = false
   videoInfo.isSubscribe = false

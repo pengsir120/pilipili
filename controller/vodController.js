@@ -12,6 +12,7 @@ function initVodClient(accessKeyId, accessKeySecret) {
   return client
 }
 
+// 获取上传凭证
 exports.getvod = async (req, res) => {
   // 请求示例
   const client = initVodClient(accessKeyId, accessKeySecret)
@@ -32,12 +33,14 @@ exports.getvod = async (req, res) => {
   }
 }
 
+// 获取视频播放地址
 const getvodPlay = async (vodId) => {
   const client = initVodClient(accessKeyId, accessKeySecret)
   try {
     const response = await client.request('GetPlayInfo', {
       VideoId: vodId
     }, {})
+    return response
   } catch (error) {
     console.log(error);
   }
@@ -49,3 +52,5 @@ exports.getPlay = async (req, res) => {
     play
   })
 }
+
+module.exports.getvodPlay = getvodPlay
