@@ -317,3 +317,11 @@ exports.createvideo = async (req, res) => {
     })
   }
 }
+
+exports.updatevideo = async (req, res) => {
+  const { videoId } = req.params
+  const dbback = await Video.findByIdAndUpdate(videoId, req.body, { new: true })
+  res.status(200).json({
+    dbback
+  })
+}
