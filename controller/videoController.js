@@ -14,6 +14,10 @@ exports.getHots = async (req, res) => {
   res.status(200).json({tops})
 }
 
+exports.getPlay = async (req, res) => {
+  
+}
+
 exports.collect = async (req, res) => {
   const { videoId } = req.params
   const userId = req.user._id
