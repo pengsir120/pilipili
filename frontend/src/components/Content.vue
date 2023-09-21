@@ -1,5 +1,5 @@
 <template>
-  <div class="px-35 bg-pink-300">
+  <div class="px-35">
     <List />
   </div>
 </template>
