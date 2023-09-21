@@ -1,0 +1,23 @@
+{
+  "id": "4262861",
+  "name": "pilipili",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "7685669",
+      "name": "p",
+      "font_class": "p2",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "10627650",
+      "name": "up",
+      "font_class": "up",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    }
+  ]
+}
