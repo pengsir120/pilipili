@@ -9,6 +9,9 @@ export default {
       width: {
         '4.25': '1.0625rem',
       },
+      minWidth: {
+        '50': '3.125rem',
+      },
       height: {
         '4.25': '1.0625rem',
         '30': '7.5rem',
@@ -16,11 +19,18 @@ export default {
         '45': '11.25rem',
         '62': '15.5rem',
       },
+      lineHeight: {
+        '16': '4rem',
+      },
+      margin: {
+        '7.5': '1.875rem',
+      },
       spacing: {
         '35': '8.75rem',
       },
       colors: {
-        'regal-gray': '#9499A0'
+        'regal-gray': '#9499A0',
+        'theme-color': '#ff9000',
       },
     },
   },
