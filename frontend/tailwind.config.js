@@ -32,6 +32,15 @@ export default {
         'regal-gray': '#9499A0',
         'theme-color': '#ff9000',
       },
+      zIndex: {
+        '10010': '10010'
+      },
+      backgroundImage: {
+        'close-icon': 'url(https://s1.hdslb.com/bfs/seed/jinkela/short/mini-login-v2/img/close.a35a1809.svg)' 
+      },
+      translate: {
+        '2/-4': '-50%'
+      }
     },
   },
   plugins: [],
