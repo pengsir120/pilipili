@@ -1,9 +1,13 @@
 <template>
-  <div class="w-full h-62">
+  <div class="w-full mt-10">
     <!-- 视频预览画面 -->
     <a href="#">
-      <div class="w-full h-43.5 overflow-hidden rounded-md">
-        <img :src="data.cover" class="w-full h-full object-cover" />
+      <div class="relative rounded-md">
+        <div class="pt-[56.25%]">
+          <picture class="w-full h-full absolute top-0 left-0 overflow-hidden  rounded-md object-cover">
+            <img :src="data.cover" class="w-full h-full object-cover"  />
+          </picture>
+        </div>
       </div>
     </a>
 

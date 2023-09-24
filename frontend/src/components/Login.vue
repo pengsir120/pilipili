@@ -2,7 +2,7 @@
   <div class="flex justify-center items-center w-screen h-screen fixed top-0 left-0 z-10010 bg-black/50 text-[14px]">
     <div class="w-[820px] min-h-[430px] relative flex justify-center bg-white rounded-lg pt-[52px] pr-[65px] pb-[29px] pl-[92px]">
       <!-- 关闭图标 -->
-      <div class="w-8 h-8 absolute top-5 right-5 bg-close-icon bg-no-repeat cursor-pointer">
+      <div @click="$emit('close')" class="w-8 h-8 absolute top-5 right-5 bg-close-icon bg-no-repeat cursor-pointer">
       </div>
 
       <!-- 二维码 -->
@@ -94,12 +94,4 @@
 </template>
 
 <script setup>
-import { onMounted, getCurrentInstance, ref } from 'vue'
-
-const instance = getCurrentInstance()
-const videoList = ref({})
-
-onMounted(() => {
-  
-})
 </script>

@@ -59,7 +59,7 @@
       </div>
 
       <ul class="flex items-center ml-5 text-[13px]">
-        <li class="shrink-0 min-w-50 mr-1 text-center text-sm cursor-pointer" @click="visible = !visible">
+        <li class="shrink-0 min-w-50 mr-1 text-center text-sm cursor-pointer" @click="loginForm({})">
           <div class="flex flex-col items-center">
             <div class="w-9 h-9 leading-9 rounded-full bg-theme-color">
               <span>登录</span>
@@ -111,12 +111,13 @@
       </ul>
     </header>
   </div>
-  <Login v-if="visible" />
+  
 </template>
 
 <script setup>
 import Login from './Login.vue'
 import { ref } from 'vue'
+import useCommandComponent from '../utils/useCommandComponent'
 
-const visible = ref(false)
+const loginForm = useCommandComponent(Login)
 </script>
