@@ -50,7 +50,7 @@
           <span :title="data.user.username">
             {{ data.user.username }}
           </span>
-          <span class="ml-1"> · {{ moment(data.updateAt).fromNow() }} </span>
+          <span class="ml-1"> · {{ $moment().diff($moment(data.updateAt), 'hours') < 22 ? $moment(data.updateAt).fromNow().replace(' ', '') : $moment(data.updateAt).format('MM-DD') }} </span>
         </div>
       </div>
     </div>
@@ -58,9 +58,6 @@
 </template>
 
 <script setup>
-// import { defineProps } from 'vue'
-import moment from "moment";
-
 const props = defineProps({
   data: Object,
 });

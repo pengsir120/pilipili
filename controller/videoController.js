@@ -243,6 +243,11 @@ exports.videolist = async (req, res) => {
       createAt: -1
     })
     .populate('user', '_id cover username')
+  for(let i = 0; i < videolist.length; i++) {
+    const vodInfo = await getvodPlay(videolist[i].vodvideoId)
+    videolist[i].cover = vodInfo.VideoBase.CoverURL
+  }
+
   const total = await Video.countDocuments()
   res.status(200).json({
     videolist,

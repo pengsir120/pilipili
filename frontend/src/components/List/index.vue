@@ -15,7 +15,13 @@ const videoList = ref({})
 
 
 onMounted(() => {
-  instance.proxy.$request('/api/v1/video/videolist').then(res => {
+  instance.proxy.$request({
+    url: '/api/v1/video/videolist',
+    params: {
+      pageNum: 1,
+      pageSize: 20
+    }
+  }).then(res => {
     videoList.value = res.data.videolist
   })
 })
