@@ -46,18 +46,18 @@
         <form class="w-[400px] h-[90px] rounded-lg border border-solid border-[#e3e5e7] leading-5 text-[#212121]">
           <div class="w-full h-11 relative flex justify-start items-center py-3 px-5">
             <div>账号</div>
-            <input type="text" placeholder="请输入账号" class="ml-5 flex-1 outline-0">
+            <input v-model="email" type="text" placeholder="请输入账号" class="ml-5 flex-1 outline-0">
           </div>
           <div class="w-full h-0 border-b border-solid border-[#e3e5e7]"></div>
           <div class="w-full h-11 relative flex justify-start items-center py-3 px-5">
             <div>密码</div>
-            <input type="text" placeholder="请输入密码" class="ml-5 flex-1 outline-0">
+            <input v-model="password" type="password" placeholder="请输入密码" class="ml-5 flex-1 outline-0">
           </div>
         </form>
 
         <div class="w-[400px] flex justify-between items-center mt-5 leading-10 text-center">
           <div class="w-[194px] h-10 text-[#18191c] rounded-lg cursor-pointer border border-solid border-[#e3e5e7]">注册</div>
-          <div class="w-[194px] h-10 bg-theme-color text-white rounded-lg cursor-pointer border border-solid border-[#e3e5e7]">登录</div>
+          <div @click="handleLogin" class="w-[194px] h-10 bg-theme-color text-white rounded-lg cursor-pointer border border-solid border-[#e3e5e7]">登录</div>
         </div>
 
         <div class="mt-6 flex flex-col justify-center items-center">
@@ -94,4 +94,22 @@
 </template>
 
 <script setup>
+import { ref, getCurrentInstance } from "vue"
+
+const email = ref("")
+const password = ref("")
+
+const instance = getCurrentInstance()
+
+const handleLogin = () => {
+  instance.proxy.$request({
+    url: '/api/v1/logins',
+    data: {
+      email: email.value,
+      password: password.value
+    }
+  }).then(res => {
+    console.log(res);
+  })
+}
 </script>
