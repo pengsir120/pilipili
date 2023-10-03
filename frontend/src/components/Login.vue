@@ -96,6 +96,7 @@
 <script setup>
 import { ref, getCurrentInstance } from "vue"
 
+const emit = defineEmits(['close'])
 const email = ref("")
 const password = ref("")
 
@@ -103,13 +104,17 @@ const instance = getCurrentInstance()
 
 const handleLogin = () => {
   instance.proxy.$request({
-    url: '/api/v1/logins',
+    url: '/api/v1/user/logins',
+    method: 'POST',
     data: {
       email: email.value,
       password: password.value
     }
   }).then(res => {
-    console.log(res);
+    if(res.status == 200) {
+      console.log(res);
+      emit('close')
+    }
   })
 }
 </script>
