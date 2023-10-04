@@ -95,7 +95,9 @@
 
 <script setup>
 import { ref, getCurrentInstance } from "vue"
+import { useStore } from "vuex"
 
+const vuexStore = useStore()
 const emit = defineEmits(['close'])
 const email = ref("")
 const password = ref("")
@@ -112,7 +114,8 @@ const handleLogin = () => {
     }
   }).then(res => {
     if(res.status == 200) {
-      console.log(res);
+      vuexStore.commit('SET_USER_INFO', res.data)
+      vuexStore.commit('SET_AUTHORIZATION', res.data.token)
       emit('close')
     }
   })
