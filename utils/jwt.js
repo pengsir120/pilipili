@@ -14,7 +14,7 @@ module.exports.createToken = async (userInfo) => {
 module.exports.verifyToken = function(required = true) {
   return async (req, res, next) => {
     let token = req.headers.authorization
-    // token = token ? token.split('Bearer ')[1] : null
+    token = token ? token.split('Bearer ')[1] : null
     if(token) {
       try {
         let userInfo = await verify(token, uuid)
