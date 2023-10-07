@@ -13,7 +13,7 @@ export default createStore({
       state.user = {
         ...data,
         cover: `${import.meta.env.VITE_APP_API_BASE}/${data.cover}` || '',
-        authorization: data.token,
+        authorization: `Bearer ${data.token}`,
       }
     },
     SET_AUTHORIZATION(state, data) {
