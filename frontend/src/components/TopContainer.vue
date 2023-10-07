@@ -69,10 +69,11 @@
       </div>
 
       <ul class="flex items-center ml-5 text-[13px]">
-        <li class="shrink-0 min-w-50 mr-1 text-center text-sm cursor-pointer" @click="loginForm({})">
+        <li class="shrink-0 min-w-50 mr-1 text-center text-sm cursor-pointer" @click="handleLogin">
           <div class="flex flex-col items-center">
             <div class="w-9 h-9 leading-9 rounded-full bg-theme-color">
-              <span>登录</span>
+              <img class="w-full h-full rounded-full" v-if="vuexStore.state.user.authorization" :src="vuexStore.state.user.cover" alt="">
+              <span v-else>登录</span>
             </div>
           </div>
         </li>
@@ -126,8 +127,13 @@
 
 <script setup>
 import Login from './Login.vue'
-import { ref } from 'vue'
 import useCommandComponent from '../utils/useCommandComponent'
+import { useStore } from "vuex"
 
+const vuexStore = useStore()
 const loginForm = useCommandComponent(Login)
+const handleLogin = () => {
+  if(vuexStore.state.user.authorization) return
+  loginForm({})
+}
 </script>

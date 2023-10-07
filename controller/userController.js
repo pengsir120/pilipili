@@ -152,11 +152,15 @@ exports.update = async (req, res) => {
 }
 
 exports.headimg = async (req, res) => {
-  console.log(req.file);
+  const userId = req.user._id
+
   const fileArr = req.file.originalname.split('.')
   const fileType = fileArr[fileArr.length - 1]
 
   try {
+    const user = await User.findById(userId)
+    user.cover = `${req.file.filename}.${fileType}`
+    await user.save()
     await rename(`./public/${req.file.filename}`, `./public/${req.file.filename}.${fileType}`)
     res.status(202).json({
       filepath: `${req.file.filename}.${fileType}`

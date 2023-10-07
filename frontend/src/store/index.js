@@ -1,20 +1,23 @@
 import { createStore } from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state() {
     return {
       user: {},
-      authorization: '',
     }
   },
 
   mutations: {
     SET_USER_INFO(state, data) {
-      state.user = data
+      state.user = {
+        ...data,
+        cover: `${import.meta.env.VITE_APP_API_BASE}/${data.cover}` || '',
+        authorization: data.token,
+      }
     },
     SET_AUTHORIZATION(state, data) {
       sessionStorage.setItem('authorization', data)
-      state.authorization = data
     }
   },
 
@@ -28,5 +31,9 @@ export default createStore({
 
   modules: {
 
-  }
+  },
+  plugins: [createPersistedState({
+    paths: ['user'],
+    storage: window.sessionStorage
+  })]
 })
