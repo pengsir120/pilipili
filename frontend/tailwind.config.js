@@ -40,6 +40,46 @@ export default {
       },
       translate: {
         '2/-4': '-50%'
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 }
+        },
+        fadeOut: {
+          '0%': { opacity: 1 },
+          '100%': { opacity: 0 }
+        },
+        avatarFadeLarge: {
+          '0%': {
+            opacity: 0,
+            // transform: scale(.4) translateY(-2px) translate(3px)
+          },
+          '30%': {
+            opacity: 1,
+          },
+          '100%': {
+            opacity: 1,
+            // transform: scale(1) translate(-36px, 10px)
+          }
+        },
+        avatarFadeSmall: {
+          '0%': {
+            opacity: 0,
+            // transform: scale(1) translate(-36px, 10px)
+          },
+          '30%': {
+            opacity: 1,
+          },
+          '100%': {
+            opacity: 0,
+            // transform: scale(.4) translateY(-2px) translate(3px)
+          }
+        }
+      },
+      animation: {
+        fadeIn: 'fadeIn .6s ease 0s 1 normal running both',
+        fadeOut: 'fadeOut .3s ease 0s 1 normal running both',
       }
     },
   },
