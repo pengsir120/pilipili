@@ -70,14 +70,14 @@
 
       <ul class="flex items-center ml-5 text-[13px]">
         <li class="shrink-0 min-w-50 h-[50px] mr-1 text-center text-sm cursor-pointer" @click="handleLogin">
-          <div class="relative z-[2]">
-            <a href="#" class="absolute top-[5px] left-2.5 z-[2] block w-[38px] h-[38px] rounded-full animate-fadeIn hover:animate-fadeOut">
+          <div @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" class="relative z-[2]">
+            <a href="#" class="absolute top-[5px] left-2.5 z-[2] block w-[38px] h-[38px] rounded-full" :class="[avatarOver ? 'animate-fadeOut' : 'animate-fadeIn']">
               <picture class="rounded-full bg-transparent relative inline-block leading-none w-full h-full align-middle">
                 <img v-if="vuexStore.state.user.authorization" :src="vuexStore.state.user.cover" class="rounded-full border-2 border-solid border-white w-full h-full block object-fill" />
                 <span v-else>登录</span>
               </picture>
             </a>
-            <a href="#" class="absolute top-[5px] left-2.5 z-[2] block rounded-full origin-top-left">
+            <a href="#" class="absolute top-[5px] left-2.5 z-[2] block rounded-full origin-top-left" :class="[avatarOver ? 'animate-avatarFadeLarge' : 'animate-avatarFadeSmall']">
               <div class="w-[82px] h-[82px] translate-x-0 translate-y-0 box-content border-2 border-solid border-white block relative bg-cover rounded-full">
                 <img :src="vuexStore.state.user.cover" class="absolute w-full h-full top-0 left-0 rounded-full will-change-transform object-cover block" />
               </div>
@@ -142,11 +142,21 @@
 import Login from './Login.vue'
 import useCommandComponent from '../utils/useCommandComponent'
 import { useStore } from "vuex"
+import { ref } from "vue"
+// import _ from "lodash"
 
 const vuexStore = useStore()
 const loginForm = useCommandComponent(Login)
 const handleLogin = () => {
   if(vuexStore.state.user.authorization) return
   loginForm({})
+}
+
+const avatarOver = ref(false)
+const handleAvatarOver = () => {
+  avatarOver.value = true
+}
+const handleAvatarOut = () => {
+  avatarOver.value = false
 }
 </script>
