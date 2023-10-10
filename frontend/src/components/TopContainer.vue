@@ -116,17 +116,17 @@
                   </div>
                 </div>
                 <div class="flex justify-between mb-3 py-0 px-4">
-                  <a href="#" class="flex flex-col items-center justify-between transition-colors hover:text-theme-color duration-200">
-                    <div class="text-[18px] font-medium">79</div>
-                    <div class="text-[12px] text-[#9499A0] transition-colors">关注</div>
+                  <a href="#" class="group flex flex-col items-center justify-between">
+                    <div class="text-[18px] font-medium transition-colors group-hover:text-theme-color duration-200">79</div>
+                    <div class="text-[12px] text-[#9499A0] transition-colors group-hover:text-theme-color duration-200">关注</div>
                   </a>
-                  <a href="#" class="flex flex-col items-center justify-between transition-colors hover:text-theme-color duration-200">
-                    <div class="text-[18px] font-medium">1</div>
-                    <div class="text-[12px] text-[#9499A0]">粉丝</div>
+                  <a href="#" class="group flex flex-col items-center justify-between">
+                    <div class="text-[18px] font-medium transition-colors group-hover:text-theme-color duration-200">1</div>
+                    <div class="text-[12px] text-[#9499A0] transition-colors group-hover:text-theme-color duration-200">粉丝</div>
                   </a>
-                  <a href="#" class="flex flex-col items-center justify-between transition-colors hover:text-theme-color duration-200">
-                    <div class="text-[18px] font-medium">1</div>
-                    <div class="text-[12px] text-[#9499A0]">动态</div>
+                  <a href="#" class="group flex flex-col items-center justify-between">
+                    <div class="text-[18px] font-medium transition-colors group-hover:text-theme-color duration-200">1</div>
+                    <div class="text-[12px] text-[#9499A0] transition-colors group-hover:text-theme-color duration-200">动态</div>
                   </a>
                 </div>
                 <div>
