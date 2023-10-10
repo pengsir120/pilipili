@@ -79,7 +79,7 @@ module.exports.update = validate([
     const phoneValidate = await User.findOne({
       phone: val
     })
-    if (phoneValidate) {
+    if (phoneValidate?.phone) {
       return Promise.reject('手机号已被注册')
     }
   }).bail(),
