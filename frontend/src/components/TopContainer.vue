@@ -1,5 +1,11 @@
 <template>
-  <div class="h-45 text-white bg-teal-300">
+  <div class="h-45 text-white relative">
+    <div class="absolute inset-x-0 inset-y-0 overflow-hidden z-[-10]">
+      <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+        <img class="w-full h-full" src="../assets/head_bg.webp" alt="">
+      </div>
+    </div>
+
     <header class="w-full h-16 flex justify-between items-center px-6">
       <ul class="shrink-0 flex items-center mr-7.5 text-sm">
         <li>
@@ -54,7 +60,7 @@
       <!-- 搜索框 -->
       <div class="flex-auto h-[38px]">
         <div class="relative my-0 mx-auto min-w-[181px] max-w-[500px]">
-          <form class="flex items-center pr-12 pl-1 relative z-[1] overflow-hidden leading-[38px] border border-solid border-[#E3E5E7] h-10 rounded-lg">
+          <form class="flex items-center pr-12 pl-1 relative z-[1] overflow-hidden leading-[38px] border border-solid border-[#E3E5E7] h-10 rounded-lg bg-white">
             <div class="flex justify-between items-center relative px-2 w-full h-8 border-2 border-solid border-transparent rounded-md">
               <input type="text" class="flex-1 overflow-hidden pr-2 bg-transparent text-[#61666D] text-[14px] leading-5 outline-0">
               <div class="w-4 h-4 cursor-pointer invisible">
@@ -69,12 +75,11 @@
       </div>
 
       <ul class="flex items-center ml-5 text-[13px]">
-        <li class="shrink-0 relative min-w-50 h-[50px] mr-1 text-center text-sm cursor-pointer" @click="handleLogin">
-          <div @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" class="relative z-[2]">
+        <li class="shrink-0 relative min-w-50 mr-2.5 text-center text-sm cursor-pointer" :class="[vuexStore.state.user.authorization ? 'h-[50px]' : '']" @click="handleLogin">
+          <div v-if="vuexStore.state.user.authorization" @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" class="relative z-[2]">
             <a href="#" class="absolute top-[5px] left-2.5 z-[2] block w-[38px] h-[38px] rounded-full" :class="[avatarOver ? 'animate-fadeOut' : 'animate-fadeIn']">
               <picture class="rounded-full bg-transparent relative inline-block leading-none w-full h-full align-middle">
-                <img v-if="vuexStore.state.user.authorization" :src="vuexStore.state.user.cover" class="rounded-full border-2 border-solid border-white w-full h-full block object-fill" />
-                <span v-else>登录</span>
+                <img :src="vuexStore.state.user.cover" class="rounded-full border-2 border-solid border-white w-full h-full block object-fill" />
               </picture>
             </a>
             <a href="#" class="absolute top-[5px] left-2.5 z-[2] block rounded-full origin-top-left" :class="[avatarOver ? 'animate-avatarFadeLarge' : 'animate-avatarFadeSmall']">
@@ -83,7 +88,7 @@
               </div>
             </a>
           </div>
-          <div @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" :class="[avatarOver ? '' : 'hidden']" class="pt-3 ml-[-12px] absolute top-full left-2/4 z-[1]" style="transform: translate3d(-50%, 0, 0)">
+          <div v-if="vuexStore.state.user.authorization" @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" :class="[avatarOver ? '' : 'hidden']" class="pt-3 ml-[-12px] absolute top-full left-2/4 z-[1]" style="transform: translate3d(-50%, 0, 0)">
             <div class="relative bg-white shadow-[0_0_30px_0_rgba(0, 0, 0, .1)] rounded-lg border border-solid border-[#E3E5E7] text-[#18191C]">
               <div class="w-[300px] pt-0 px-6 pb-[18px] rounded-lg bg-white">
                 <a href="#" class="block mb-1 w-20 h-20 opacity-0"></a>
@@ -158,6 +163,11 @@
                   <span>退出登录</span>
                 </div>
               </div>
+            </div>
+          </div>
+          <div v-else class="flex items-center flex-col shrink-0 mr-0 min-w-50 text-center text-[13px]">
+            <div class="w-9 h-9 rounded-full text-white bg-theme-color text-center text-[14px] leading-9">
+              <span>登录</span>
             </div>
           </div>
         </li>
