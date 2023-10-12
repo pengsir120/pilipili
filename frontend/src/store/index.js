@@ -18,7 +18,11 @@ export default createStore({
     },
     SET_AUTHORIZATION(state, data) {
       sessionStorage.setItem('authorization', data)
-    }
+    },
+    LOG_OUT() {
+      sessionStorage.removeItem('authorization')
+      location.reload()
+    },
   },
 
   actions: {
@@ -33,7 +37,12 @@ export default createStore({
 
   },
   plugins: [createPersistedState({
-    paths: ['user'],
-    storage: window.sessionStorage
+    storage: window.sessionStorage,
+    reducer (val) {
+      if(!sessionStorage.getItem('authorization')) return {}
+      return {
+        user: val.user
+      }
+    }
   })]
 })

@@ -75,24 +75,24 @@
       </div>
 
       <ul class="flex items-center ml-5 text-[13px]">
-        <li class="shrink-0 relative min-w-50 mr-2.5 text-center text-sm cursor-pointer" :class="[vuexStore.state.user.authorization ? 'h-[50px]' : '']" @click="handleLogin">
-          <div v-if="vuexStore.state.user.authorization" @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" class="relative z-[2]">
+        <li class="shrink-0 relative min-w-50 mr-2.5 text-center text-sm cursor-pointer" :class="[user.authorization ? 'h-[50px]' : '']" @click="handleLogin">
+          <div v-if="user.authorization" @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" class="relative z-[2]">
             <a href="#" class="absolute top-[5px] left-2.5 z-[2] block w-[38px] h-[38px] rounded-full" :class="[avatarOver ? 'animate-fadeOut' : 'animate-fadeIn']">
               <picture class="rounded-full bg-transparent relative inline-block leading-none w-full h-full align-middle">
-                <img :src="vuexStore.state.user.cover" class="rounded-full border-2 border-solid border-white w-full h-full block object-fill" />
+                <img :src="user.cover" class="rounded-full border-2 border-solid border-white w-full h-full block object-fill" />
               </picture>
             </a>
             <a href="#" class="absolute top-[5px] left-2.5 z-[2] block rounded-full origin-top-left" :class="[avatarOver ? 'animate-avatarFadeLarge' : 'animate-avatarFadeSmall']">
               <div class="w-[82px] h-[82px] translate-x-0 translate-y-0 box-content border-2 border-solid border-white block relative bg-cover rounded-full">
-                <img :src="vuexStore.state.user.cover" class="absolute w-full h-full top-0 left-0 rounded-full will-change-transform object-cover block" />
+                <img :src="user.cover" class="absolute w-full h-full top-0 left-0 rounded-full will-change-transform object-cover block" />
               </div>
             </a>
           </div>
-          <div v-if="vuexStore.state.user.authorization" @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" :class="[avatarOver ? '' : 'hidden']" class="pt-3 ml-[-12px] absolute top-full left-2/4 z-[1]" style="transform: translate3d(-50%, 0, 0)">
+          <div v-if="user.authorization" @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" :class="[avatarOver ? '' : 'hidden']" class="pt-3 ml-[-12px] absolute top-full left-2/4 z-[1]" style="transform: translate3d(-50%, 0, 0)">
             <div class="relative bg-white shadow-[0_0_30px_0_rgba(0, 0, 0, .1)] rounded-lg border border-solid border-[#E3E5E7] text-[#18191C]">
               <div class="w-[300px] pt-0 px-6 pb-[18px] rounded-lg bg-white">
                 <a href="#" class="block mb-1 w-20 h-20 opacity-0"></a>
-                <a href="#" class="flex justify-center mt-[-40px] mb-0.5 text-[18px] text-[#18191C]">{{vuexStore.state.user.username}}</a>
+                <a href="#" class="flex justify-center mt-[-40px] mb-0.5 text-[18px] text-[#18191C]">{{user.username}}</a>
                 <div class="relative flex justify-center items-center mb-[6px] text-[12px]">
                   <a href="#">
                     <span class="inline-block mr-[5px] text-[#9499A0]">硬币:</span>
@@ -158,7 +158,7 @@
                   </a>
                 </div>
                 <div class="w-full h-px my-2.5 mx-0 bg-[#E3E5E7]"></div>
-                <div class="flex items-center py-2.5 px-[14px] rounded-lg text-[#61666D] text-[14px] transition-colors hover:bg-[#E3E5E7] duration-300">
+                <div @click="handleLogout" class="flex items-center py-2.5 px-[14px] rounded-lg text-[#61666D] text-[14px] transition-colors hover:bg-[#E3E5E7] duration-300">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="link-icon mr-4"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.6137 9.30115C17.6932 9.10837 17.6932 8.89282 17.6137 8.70004C17.5743 8.60393 17.5165 8.51726 17.4443 8.44504L15.2221 6.22282C14.9148 5.9156 14.4176 5.91615 14.111 6.22282C13.8043 6.52948 13.8037 7.02671 14.111 7.33393L14.9921 8.21504L7.99985 8.21504C7.56596 8.21448 7.21429 8.56615 7.21429 9.00059C7.21429 9.21726 7.30207 9.41393 7.44429 9.55615C7.58651 9.69837 7.78318 9.78615 7.99985 9.78615L14.9921 9.78615L14.111 10.6673C13.8043 10.9739 13.8037 11.4712 14.111 11.7784C14.4182 12.0856 14.9154 12.085 15.2221 11.7784L17.4443 9.55615C17.5165 9.48393 17.5743 9.39726 17.6137 9.30115" fill="#61666D"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M11.8889 5.11111C9.74127 2.96349 6.25873 2.96349 4.11111 5.11111C1.96349 7.25873 1.96349 10.7413 4.11111 12.8889C6.25873 15.0365 9.74127 15.0365 11.8889 12.8889C12.1957 12.5821 12.6932 12.5821 13 12.8889C13.3068 13.1957 13.3068 13.6932 13 14C10.2387 16.7613 5.76127 16.7613 3 14C0.238731 11.2387 0.23873 6.76127 3 4C5.76127 1.23873 10.2387 1.23873 13 4C13.3068 4.30683 13.3068 4.80429 13 5.11111C12.6932 5.41794 12.1957 5.41794 11.8889 5.11111Z" fill="#61666D"></path></svg>
                   <span>退出登录</span>
                 </div>
@@ -223,10 +223,12 @@
 import Login from './Login.vue'
 import useCommandComponent from '../utils/useCommandComponent'
 import { useStore } from "vuex"
-import { ref } from "vue"
+import { ref, computed } from "vue"
 // import _ from "lodash"
 
 const vuexStore = useStore()
+const user = computed(() => vuexStore.state.user)
+
 const loginForm = useCommandComponent(Login)
 const handleLogin = () => {
   if(vuexStore.state.user.authorization) return
@@ -239,5 +241,9 @@ const handleAvatarOver = () => {
 }
 const handleAvatarOut = () => {
   avatarOver.value = false
+}
+
+const handleLogout = () => {
+  vuexStore.commit('LOG_OUT')
 }
 </script>
