@@ -94,18 +94,19 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance } from "vue"
+import { ref } from "vue"
 import { useStore } from "vuex"
+import userGetGlobalProperties from '../utils/userGetGlobalProperties'
 
 const vuexStore = useStore()
 const emit = defineEmits(['close'])
 const email = ref("")
 const password = ref("")
 
-const instance = getCurrentInstance()
+const { $request } = userGetGlobalProperties()
 
 const handleLogin = () => {
-  instance.proxy.$request({
+  $request({
     url: '/api/v1/user/logins',
     method: 'POST',
     data: {

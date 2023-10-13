@@ -6,23 +6,30 @@
 
 <script setup>
 import Item from './Item.vue'
-import { onMounted, getCurrentInstance, ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import userGetGlobalProperties from '../../utils/userGetGlobalProperties'
 
-const instance = getCurrentInstance()
+const { $request, $bus } = userGetGlobalProperties()
 const videoList = ref({})
 
-
-
-
-onMounted(() => {
-  instance.proxy.$request({
+const getVideoList = (params = {}) => {
+  console.log(params);
+  $request({
     url: '/api/v1/video/videolist',
     params: {
       pageNum: 1,
-      pageSize: 20
+      pageSize: 20,
+      ...params
     }
   }).then(res => {
     videoList.value = res.data.videolist
   })
+}
+
+onMounted(() => {
+  getVideoList()
 })
+
+$bus?.on('getVideoList', getVideoList)
+
 </script>
