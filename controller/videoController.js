@@ -233,22 +233,27 @@ exports.comment = async (req, res) => {
 
 exports.videolist = async (req, res) => {
   const {
-    pageNum = 1, pageSize = 10
+    pageNum = 1, pageSize = 10, title = undefined
   } = req.query
+  const filter = {}
+  if (title) {
+    filter['title'] = title
+  }
   const videolist = await Video
-    .find()
+    .find(filter)
     .skip((pageNum - 1) * pageSize)
     .limit(pageSize)
     .sort({
       createAt: -1
     })
     .populate('user', '_id cover username')
+  console.log(videolist);
   for(let i = 0; i < videolist.length; i++) {
     const vodInfo = await getvodPlay(videolist[i].vodvideoId)
     videolist[i].cover = vodInfo.VideoBase.CoverURL
   }
 
-  const total = await Video.countDocuments()
+  const total = await Video.where(filter).countDocuments()
   res.status(200).json({
     videolist,
     total
