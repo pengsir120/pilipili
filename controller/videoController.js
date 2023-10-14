@@ -233,12 +233,9 @@ exports.comment = async (req, res) => {
 
 exports.videolist = async (req, res) => {
   const {
-    pageNum = 1, pageSize = 10, title = undefined
+    pageNum = 1, pageSize = 10, title = ''
   } = req.query
-  const filter = {}
-  if (title) {
-    filter['title'] = title
-  }
+  const filter = {title: new RegExp(title, 'i')}
   const videolist = await Video
     .find(filter)
     .skip((pageNum - 1) * pageSize)
