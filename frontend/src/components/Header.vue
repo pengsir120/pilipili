@@ -211,7 +211,7 @@
 </template>
 
 <script setup>
-import Login from './Login.vue'
+import Login from './login.vue'
 import useCommandComponent from '../utils/useCommandComponent'
 import { useStore } from "vuex"
 import { ref, computed, defineProps } from "vue"

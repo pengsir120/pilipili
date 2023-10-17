@@ -1,13 +1,9 @@
 <script setup>
-import TopContainer from './components/TopContainer.vue'
-import Menu from './components/Menu.vue'
-import Content from './components/Content.vue'
+import Home from './views/home.vue'
 </script>
 
 <template>
-  <TopContainer />
-  <Menu />
-  <Content />
+  <Home />
 </template>
 
 <style scoped>

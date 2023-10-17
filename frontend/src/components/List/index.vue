@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import Item from './Item.vue'
+import Item from './item.vue'
 import { onMounted, ref } from 'vue'
 import userGetGlobalProperties from '../../utils/userGetGlobalProperties'
 
@@ -13,7 +13,6 @@ const { $request, $bus } = userGetGlobalProperties()
 const videoList = ref({})
 
 const getVideoList = (params = {}) => {
-  console.log(params);
   $request({
     url: '/api/v1/video/videolist',
     params: {

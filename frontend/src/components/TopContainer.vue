@@ -12,5 +12,5 @@
 </template>
 
 <script setup>
-import Header from './Header.vue'
+import Header from './header.vue'
 </script>
