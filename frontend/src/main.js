@@ -7,6 +7,7 @@ import moment from "moment";
 import 'moment/dist/locale/zh-cn'
 import store from './store'
 import mitt from 'mitt'
+import router from './router/index'
 
 const Mit = mitt()
 
@@ -14,4 +15,4 @@ const app = createApp(App)
 app.config.globalProperties.$request = axios
 app.config.globalProperties.$moment = moment
 app.config.globalProperties.$bus = Mit
-app.use(store).mount('#app')
+app.use(store).use(router).mount('#app')
