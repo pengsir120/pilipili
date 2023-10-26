@@ -68,7 +68,6 @@ const router = useRouter()
 const route = useRoute()
 
 const handleItemClick = (item) => {
-  console.log(item);
   router.push({
     name: 'detail'
   })

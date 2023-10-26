@@ -4,4 +4,5 @@
 
 <script setup>
 import Header from '@/components/header.vue'
+import VideoPlayer from '@/components/videoPlayer.vue'
 </script>
