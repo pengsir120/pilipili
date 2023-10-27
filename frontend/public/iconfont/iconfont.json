@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "5203263",
+      "name": "禁止",
+      "font_class": "jinzhi",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
       "icon_id": "7685669",
       "name": "p",
       "font_class": "p2",
