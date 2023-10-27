@@ -6,7 +6,7 @@
 import videojs from 'video.js';
 import { ref, onMounted, onBeforeUnmount, defineProps } from 'vue'
 
-defineProps({
+const props = defineProps({
   options: {
     type: Object,
     default(rawProps) {
@@ -16,10 +16,10 @@ defineProps({
 })
 
 const player = ref(null)
-
+const videoPlayer = ref(null)
 onMounted(() => {
-  player.value = videojs(this.$refs.videoPlayer, this.options, function onPlayerReady() {
-    console.log('onPlayerReady', this);
+  player.value = videojs(videoPlayer.value, props.options, function onPlayerReady() {
+    console.log('onPlayerReady');
 })
 })
 

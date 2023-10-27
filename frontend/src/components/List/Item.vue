@@ -1,7 +1,7 @@
 <template>
   <div class="w-full mt-10">
     <!-- 视频预览画面 -->
-    <a href="javascript:void(0);" @click="handleItemClick">
+    <a href="javascript:void(0);">
       <div class="relative rounded-md">
         <div class="pt-[56.25%]">
           <picture class="w-full h-full absolute top-0 left-0 overflow-hidden  rounded-md object-cover">
@@ -58,18 +58,7 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
-
-const props = defineProps({
+defineProps({
   data: Object,
 });
-
-const router = useRouter()
-const route = useRoute()
-
-const handleItemClick = (item) => {
-  router.push({
-    name: 'detail'
-  })
-}
 </script>

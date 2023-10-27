@@ -1,13 +1,14 @@
 <template>
   <div class="grid grid-cols-5 gap-5">
-    <Item v-for="(item, index) in videoList" :data="item" :key="index" />
+    <Item v-for="(item, index) in videoList" :data="item" :key="index" @click="handleItemClick(item)" />
   </div>
 </template>
 
 <script setup>
 import Item from './item.vue'
 import { onMounted, ref } from 'vue'
-import userGetGlobalProperties from '../../utils/userGetGlobalProperties'
+import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
+import { useRouter } from 'vue-router'
 
 const { $request, $bus } = userGetGlobalProperties()
 const videoList = ref({})
@@ -31,4 +32,13 @@ onMounted(() => {
 
 $bus?.on('getVideoList', getVideoList)
 
+const router = useRouter()
+const handleItemClick = (item) => {
+  router.push({
+    path: '/detail',
+    query: {
+      videoId: item._id
+    }
+  })
+}
 </script>
