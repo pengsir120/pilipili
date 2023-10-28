@@ -1,5 +1,5 @@
 <template>
-  <div class="px-35">
+  <div class="max-w-[2260px] my-0 mx-auto px-35">
     <List />
   </div>
 </template>

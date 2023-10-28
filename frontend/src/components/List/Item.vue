@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full mt-10">
+  <div class="w-full mt-10 [&:nth-child(5-n)]:mt-0">
     <!-- 视频预览画面 -->
     <a href="javascript:void(0);">
       <div class="relative rounded-md">

@@ -82,6 +82,11 @@ export default {
         fadeOut: 'fadeOut .3s ease 0s 1 normal running both',
         avatarFadeSmall: 'avatarFadeSmall .35s ease 0s 1 normal running both',
         avatarFadeLarge: 'avatarFadeLarge .35s ease 0s 1 normal running both',
+      },
+      screens: {
+        '3xl': '1792px',
+        '4xl': '2048px',
+        '5xl': '2200px'
       }
     },
   },
