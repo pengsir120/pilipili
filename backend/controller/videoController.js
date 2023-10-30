@@ -202,7 +202,7 @@ exports.commentlist = async (req, res) => {
   } = req.body
   const commentlist = await Videocomment.find({
     video: videoId
-  }).skip((pageNum - 1) * pageSize).limit(pageSize).populate('user', '_id username image')
+  }).skip((pageNum - 1) * pageSize).limit(pageSize).populate('user', '_id username image cover')
   const count = await Videocomment.count()
   res.status(200).json({
     commentlist,

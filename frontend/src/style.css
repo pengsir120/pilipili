@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .focus-bg {
+    background-color: #FFFFFF;
+    border-color: #C9CCD0;
+  }
+}

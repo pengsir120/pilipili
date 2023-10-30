@@ -56,16 +56,50 @@
                 </ul>
               </div>
               <div class="relative">
+                <!-- 发表评论 -->
                 <div>
                   <div class="flex flex-col">
-                    <div class="flex h-[50px]">
+                    <div class="flex h-[50px] transition-all duration-200" :class="{ 'h-[65px]': isFocus }">
                       <div class="flex justify-center items-center w-20 h-[50px]">
-                        <div class="w-12 h-12 block relative bg-cover rounded-full">
-
+                        <div class="w-12 h-12 block relative bg-cover bg-head-img rounded-full">
+                          <img :src="user.cover" class="rounded-full  w-full h-full block object-cover" />
                         </div>
                       </div>
-                      <div></div>
-                      <div></div>
+                      <div class="relative flex-1">
+                        <textarea v-model="content" @focus="isFocus = true" @blur="isFocus = false" placeholder="下面我简单喵两句" class="w-full h-full py-[5px] px-2.5 border border-solid border-[#F1F2F3] rounded-md bg-[#F1F2F3] leading-[38px] text-[#18191C] resize-none outline-none overflow-auto text-[12px] hover:bg-white hover:border-[#C9CCD0]" :class="{ 'focus-bg': isFocus }"></textarea>
+                      </div>
+                      <div class="flex justify-center items-center relative basis-[70px] ml-2.5 rounded cursor-pointer after:content-[''] after:absolute after:opacity-50 after:w-full after:h-full after:rounded after:bg-[#00AEEC] hover:after:opacity-100" :class="{ 'after:opacity-100': content.length > 0 }">
+                        <div class="absolute z-[1] text-[16px] text-white">发布</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 评论列表 -->
+                <div v-if="commentList.length" class="mt-[14px] pb-[100px]">
+                  <div class="relative" v-for="item in commentList" :key="item._id">
+                    <div class="pt-[22px] pr-0 pb-0 pl-20">
+                      <div class="flex justify-center absolute left-0 w-20 cursor-pointer">
+                        <div>
+                          <div class="w-12 h-12 block relative bg-head-img bg-cover rounded-full m-0 p-0">
+                            <img v-if="item.user.cover" :src="`${picUrl}/${item.user.cover}`" class="rounded-full  w-full h-full block object-cover" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="relative">
+                        <div class="flex items-center mb-1 text[14px]">
+                          <div class="font-medium mr-[5px] text-[#61666D] cursor-pointer">
+                            {{item.user.username}}
+                          </div>
+                        </div>
+                        <div class="relative py-0.5 px-0 text-[16px] leading-[26px]">
+                          <span>{{item.content}}</span>
+                          <div class="flex items-center relative mt-0.5 text-[13px] text-[#9499A0]">
+                            <span class="mr-5">{{$moment(item.createAt).format("YYYY-MM-DD HH:mm:ss")}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ml-20 mt-[14px] border border-solid border-[#E3E5E7]">
                     </div>
                   </div>
                 </div>
@@ -85,10 +119,13 @@
 import Header from '@/components/header.vue'
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRoute } from 'vue-router'
-import { onMounted, ref, onBeforeUnmount } from 'vue'
+import { onMounted, ref, onBeforeUnmount, computed } from 'vue'
 import videojs from 'video.js'
+import { useStore } from "vuex"
 
 const { $request } = userGetGlobalProperties()
+const vuexStore = useStore()
+const user = computed(() => vuexStore.state.user)
 
 const route = useRoute()
 const videoDetail = ref({})
@@ -101,7 +138,6 @@ const videoOptions = ref({
   fill: true,
   sources: []
 })
-
 const getVideoDetail = () => {
   $request({
     url: `/api/v1/video/video/${route.query.videoId}`
@@ -117,8 +153,22 @@ const getVideoDetail = () => {
   })
 }
 
+const isFocus = ref(false)
+const content = ref('')
+
+const picUrl = ref(`${import.meta.env.VITE_APP_API_BASE}`)
+const commentList = ref([])
+const getCommentList = () => {
+  $request({
+    url: `/api/v1/video/commentlist/${route.query.videoId}`
+  }).then(res => {
+    commentList.value = res.data.commentlist || []
+  })
+}
+
 onMounted(() => {
   getVideoDetail()
+  getCommentList()
 })
 
 onBeforeUnmount(() => {
