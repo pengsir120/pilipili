@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-5 gap-5">
-    <Item v-for="(item, index) in videoList" :data="item" :key="index" @click="handleItemClick(item)" />
+    <Item v-for="(item, index) in videoList" :data="item" :key="index" @click="handleItemClick(item)" class="w-full" :class="{ 'mt-10': index > 4  }" />
   </div>
 </template>
 
