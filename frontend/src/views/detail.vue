@@ -62,13 +62,13 @@
                     <div class="flex h-[50px] transition-all duration-200" :class="{ 'h-[65px]': isFocus }">
                       <div class="flex justify-center items-center w-20 h-[50px]">
                         <div class="w-12 h-12 block relative bg-cover bg-head-img rounded-full">
-                          <img :src="user.cover" class="rounded-full  w-full h-full block object-cover" />
+                          <img v-if="user.cover" :src="user.cover" class="rounded-full  w-full h-full block object-cover" />
                         </div>
                       </div>
                       <div class="relative flex-1">
                         <textarea v-model="content" @focus="isFocus = true" @blur="isFocus = false" placeholder="下面我简单喵两句" class="w-full h-full py-[5px] px-2.5 border border-solid border-[#F1F2F3] rounded-md bg-[#F1F2F3] leading-[38px] text-[#18191C] resize-none outline-none overflow-auto text-[12px] hover:bg-white hover:border-[#C9CCD0]" :class="{ 'focus-bg': isFocus }"></textarea>
                       </div>
-                      <div class="flex justify-center items-center relative basis-[70px] ml-2.5 rounded cursor-pointer after:content-[''] after:absolute after:opacity-50 after:w-full after:h-full after:rounded after:bg-[#00AEEC] hover:after:opacity-100" :class="{ 'after:opacity-100': content.length > 0 }">
+                      <div @click="handleComment" class="flex justify-center items-center relative basis-[70px] ml-2.5 rounded cursor-pointer after:content-[''] after:absolute after:w-full after:h-full after:rounded after:bg-[#00AEEC] hover:after:opacity-100" :class="[content.length > 0 ? 'after:opacity-100' : 'after:opacity-50']">
                         <div class="absolute z-[1] text-[16px] text-white">发布</div>
                       </div>
                     </div>
@@ -155,6 +155,18 @@ const getVideoDetail = () => {
 
 const isFocus = ref(false)
 const content = ref('')
+const handleComment = () => {
+  $request({
+    url: `/api/v1/video/comment/${route.query.videoId}`,
+    method: 'post',
+    data: {
+      content: content.value
+    }
+  }).then(res => {
+    getCommentList()
+    content.value = ''
+  })
+}
 
 const picUrl = ref(`${import.meta.env.VITE_APP_API_BASE}`)
 const commentList = ref([])
