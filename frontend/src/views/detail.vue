@@ -49,7 +49,7 @@
                   <li class="flex items-center text-[24px]">
                     <span class="font-medium">评论</span>
                     <span class="text-[14px] mr-9 ml-[6px] font-normal text-[#9499A0]">
-                      {{videoDetail.commentCount}}
+                      {{commentList.length}}
                     </span>
                   </li>
                   <!-- <li></li> -->
