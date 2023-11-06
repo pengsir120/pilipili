@@ -7,7 +7,7 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use((config) => {
-  config.headers['Authorization'] = `Bearer ${sessionStorage.getItem('authorization')}` || ''
+  config.headers['Authorization'] = sessionStorage.getItem('authorization') ? `Bearer ${sessionStorage.getItem('authorization')}` : ''
   config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json'
   if(config.type == 'file') {
     config.headers['Content-Type'] = 'application/multipart/form-data'
