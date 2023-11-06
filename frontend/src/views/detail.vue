@@ -49,7 +49,7 @@
                   <li class="flex items-center text-[24px]">
                     <span class="font-medium">评论</span>
                     <span class="text-[14px] mr-9 ml-[6px] font-normal text-[#9499A0]">
-                      {{commentList.length}}
+                      {{commentCount}}
                     </span>
                   </li>
                   <!-- <li></li> -->
@@ -170,11 +170,17 @@ const handleComment = () => {
 
 const picUrl = ref(`${import.meta.env.VITE_APP_API_BASE}`)
 const commentList = ref([])
+const commentCount = ref(0)
 const getCommentList = () => {
   $request({
-    url: `/api/v1/video/commentlist/${route.query.videoId}`
+    url: `/api/v1/video/commentlist/${route.query.videoId}`,
+    params: {
+      pageNum: 1,
+      pageSize: 100
+    }
   }).then(res => {
     commentList.value = res.data.commentlist || []
+    commentCount.value = res.data.count
   })
 }
 
