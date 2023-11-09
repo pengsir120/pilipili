@@ -69,19 +69,19 @@
 
       <ul class="flex items-center ml-5 text-[13px]">
         <li class="shrink-0 relative min-w-50 mr-2.5 text-center text-sm cursor-pointer" :class="[user.authorization ? 'h-[50px]' : '']" @click="handleLogin">
-          <div v-if="user.authorization" @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" class="relative z-[2]">
-            <a href="#" class="absolute top-[5px] left-2.5 z-[2] block w-[38px] h-[38px] rounded-full" :class="[avatarOver ? 'animate-fadeOut' : 'animate-fadeIn']">
+          <div v-if="user.authorization" @mouseover.once="avatarAreaHovered = true" class="relative z-[2] group peer/up">
+            <a href="#" class="absolute top-[5px] left-2.5 z-[2] block w-[38px] h-[38px] rounded-full" :class="{ 'group-hover:animate-fadeOut': avatarAreaHovered, 'animate-fadeIn': avatarAreaHovered }">
               <picture class="rounded-full bg-transparent relative inline-block leading-none w-full h-full align-middle">
                 <img :src="user.cover" class="rounded-full border-2 border-solid border-white w-full h-full block object-fill" />
               </picture>
             </a>
-            <a href="#" class="absolute top-[5px] left-2.5 z-[2] block rounded-full origin-top-left" :class="[avatarOver ? 'animate-avatarFadeLarge' : 'animate-avatarFadeSmall']">
+            <a href="#" class="absolute top-[5px] left-2.5 z-[2] block rounded-full origin-top-left" :class="{ 'group-hover:animate-avatarFadeLarge': avatarAreaHovered, 'animate-avatarFadeSmall': avatarAreaHovered }">
               <div class="w-[82px] h-[82px] translate-x-0 translate-y-0 box-content border-2 border-solid border-white block relative bg-cover rounded-full">
                 <img :src="user.cover" class="absolute w-full h-full top-0 left-0 rounded-full will-change-transform object-cover block" />
               </div>
             </a>
           </div>
-          <div v-if="user.authorization" @mouseover="handleAvatarOver" @mouseout="handleAvatarOut" :class="[avatarOver ? '' : 'hidden']" class="pt-3 ml-[-12px] absolute top-full left-2/4 z-[1]" style="transform: translate3d(-50%, 0, 0)">
+          <div v-if="user.authorization" class="pt-3 ml-[-12px] absolute top-full left-2/4 z-[1] hidden" style="transform: translate3d(-50%, 0, 0)" :class="{ 'peer-hover/up:block': avatarAreaHovered, 'hover:block': avatarAreaHovered }">
             <div class="relative bg-white shadow-[0_0_30px_0_rgba(0, 0, 0, .1)] rounded-lg border border-solid border-[#E3E5E7] text-[#18191C]">
               <div class="w-[300px] pt-0 px-6 pb-[18px] rounded-lg bg-white">
                 <a href="#" class="block mb-1 w-20 h-20 opacity-0"></a>
@@ -163,6 +163,7 @@
               <span>登录</span>
             </div>
           </div>
+          <!-- <popover v-popover></popover> -->
         </li>
         <li class="shrink-0 min-w-50 mr-1 leading-tight text-center cursor-pointer">
           <a href="#" class="flex flex-col items-center">
@@ -217,6 +218,7 @@ import { useStore } from "vuex"
 import { ref, computed, defineProps } from "vue"
 import userGetGlobalProperties from '../utils/userGetGlobalProperties'
 import { useRouter, useRoute } from 'vue-router'
+import popover from './popover.vue'
 
 defineProps({
   isIndex: {
@@ -236,13 +238,14 @@ const handleLogin = () => {
   loginForm({})
 }
 
-const avatarOver = ref(false)
-const handleAvatarOver = () => {
-  avatarOver.value = true
-}
-const handleAvatarOut = () => {
-  avatarOver.value = false
-}
+const avatarAreaHovered = ref(false)
+// const avatarOver = ref(false)
+// const handleAvatarOver = () => {
+//   avatarOver.value = true
+// }
+// const handleAvatarOut = () => {
+//   avatarOver.value = false
+// }
 
 const handleLogout = () => {
   vuexStore.commit('LOG_OUT')
