@@ -33,7 +33,7 @@
       <div class="relative h-[657px]">
         <div class="absolute z-0 w-full h-full flex flex-col flex-nowrap shadow-[0_0_8px_0_#F1F2F3]">
           <div class="relative flex-1 overflow-hidden bg-black">
-            <video ref="videoPlayer" class="video-js"></video>
+            <Plyr v-if="plyrOptions" :options="plyrOptions" class="w-full h-full"></Plyr>
           </div>
           <div class="h-[56px] relative flex items-center py-0 px-3 bg-white">
 
@@ -120,8 +120,8 @@ import Header from '@/components/header.vue'
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRoute } from 'vue-router'
 import { onMounted, ref, onBeforeUnmount, computed } from 'vue'
-import videojs from 'video.js'
 import { useStore } from "vuex"
+import Plyr from '@/components/plyr.vue'
 
 const { $request } = userGetGlobalProperties()
 const vuexStore = useStore()
@@ -130,26 +130,19 @@ const user = computed(() => vuexStore.state.user)
 const route = useRoute()
 const videoDetail = ref({})
 
-const player = ref(null)
-const videoPlayer = ref(null)
-const videoOptions = ref({
-  autoplay: true,
-  controls: true,
-  fill: true,
-  sources: []
-})
+
+const plyrOptions = ref(null)
 const getVideoDetail = () => {
   $request({
     url: `/api/v1/video/video/${route.query.videoId}`
   }).then(res => {
     videoDetail.value = res.data
-    videoOptions.value.sources.push({
-      src: videoDetail.value.vod.PlayInfoList.PlayInfo[0]['PlayURL'],
-      type: "video/mp4"
-    })
-    player.value = videojs(videoPlayer.value, videoOptions.value, function onPlayerReady() {
-      console.log('onPlayerReady');
-    })
+
+    plyrOptions.value = {
+      ...res.data,
+      source: res.data.vod.PlayInfoList.PlayInfo[0]['PlayURL'],
+      poster: res.data.cover
+    }
   })
 }
 
@@ -190,8 +183,6 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if(player.value) {
-    player.value.dispose()
-  }
+
 })
 </script>

@@ -8,3 +8,9 @@
     border-color: #C9CCD0;
   }
 }
+
+@layer base {
+  :root {
+    --plyr-color-main: #ff9000;
+  }
+}
