@@ -12,16 +12,16 @@
     </a>
 
     <!-- 底部描述 -->
-    <div class="flex">
-      <div class="w-full h-16 mt-2.5 text-[15px] flex-1">
+    <div class="flex mt-2.5 3xl:mt-3">
+      <div class="w-full text-[15px] 3xl:text-[16px] flex-1">
         <h3
           :title="data.title"
-          class="w-full h-11 pr-6 line-clamp-2 text-ellipsis cursor-pointer"
+          class="w-full h-11 3xl:h-12 pr-6 line-clamp-2 text-ellipsis cursor-pointer"
         >
           {{ data.title }}
         </h3>
         <div
-          class="w-full h-fit mt-1 leading-4 flex justify-start justify-items-center text-[13px] text-regal-gray"
+          class="w-full h-fit mt-1 leading-4 3xl:leading-[19px] flex justify-start justify-items-center text-[13px] 3xl:text-[14px] text-regal-gray"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
