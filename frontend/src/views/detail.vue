@@ -3,7 +3,7 @@
     <Header :isIndex="false" />
   </div>
   <div class="max-w-[2540px] min-w-[1080px] w-auto my-0 mx-auto py-0 px-2.5 flex justify-center relative box-content">
-    <div class="sticky h-fit z-[1] w-[1068px]">
+    <div class="sticky h-fit z-[1] w-[1068px] 3xl:w-[1694px]">
       <div class="h-[108px] pt-[22px] box-border">
         <h1 class=" text-[22px] leading-[34px]">
           {{videoDetail.title}}
@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-      <div class="relative h-[657px]">
+      <div class="relative h-[657px] 3xl:h-[1009px]">
         <div class="absolute z-0 w-full h-full flex flex-col flex-nowrap shadow-[0_0_8px_0_#F1F2F3]">
           <div class="relative flex-1 overflow-hidden bg-black">
             <Plyr v-if="plyrOptions" :options="plyrOptions" class="w-full h-full"></Plyr>
