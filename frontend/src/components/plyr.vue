@@ -71,6 +71,7 @@ onMounted(() => {
       480: 'SD',
     },
   },
+  autoplay: true,
   // iconUrl: 'dist/demo.svg',
   // keyboard: {
   //   global: true,
