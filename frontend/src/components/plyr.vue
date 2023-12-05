@@ -72,6 +72,7 @@ onMounted(() => {
     },
   },
   autoplay: true,
+  ratio: '16:9',
   // iconUrl: 'dist/demo.svg',
   // keyboard: {
   //   global: true,
