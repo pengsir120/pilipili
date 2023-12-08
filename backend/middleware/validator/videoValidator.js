@@ -11,5 +11,5 @@ module.exports.video = validate([
   .isLength({
     max: 20
   }).withMessage('视频名长度不能大于20').bail(),
-  body('vodvideoId').notEmpty().withMessage('Vod不能为空').bail()
+  // body('vodvideoId').notEmpty().withMessage('Vod不能为空').bail()
 ])

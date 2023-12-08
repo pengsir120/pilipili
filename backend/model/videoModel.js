@@ -12,7 +12,7 @@ const videoSchema = new mongoose.Schema({
   },
   vodvideoId: {
     type: String,
-    required: true
+    required: false
   },
   user: {
     type: mongoose.ObjectId,
@@ -34,6 +34,10 @@ const videoSchema = new mongoose.Schema({
   dislikeCount: {
     type: Number,
     default: 0,
+  },
+  url: {
+    type: String,
+    required: false
   },
   ...baseModel,
 })

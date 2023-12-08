@@ -8,6 +8,7 @@ const {
 const { hotInc, topHots } = require('../model/redis/redishotsinc')
 // 观看 +1 点赞 +2 评论 +2 收藏 +3
 const { getvodPlay } = require('../controller/vodController')
+const minioClient = require('../utils/minio')
 
 exports.getHots = async (req, res) => {
   const { topnum } = req.params
@@ -246,8 +247,10 @@ exports.videolist = async (req, res) => {
     .populate('user', '_id cover username')
   console.log(videolist);
   for(let i = 0; i < videolist.length; i++) {
-    const vodInfo = await getvodPlay(videolist[i].vodvideoId)
+    if(videolist[i].vodvideoId) {
+      const vodInfo = await getvodPlay(videolist[i].vodvideoId)
     videolist[i].cover = vodInfo.VideoBase.CoverURL
+    }
   }
 
   const total = await Video.where(filter).countDocuments()
@@ -330,5 +333,18 @@ exports.updatevideo = async (req, res) => {
   const dbback = await Video.findByIdAndUpdate(videoId, req.body, { new: true })
   res.status(200).json({
     dbback
+  })
+}
+
+exports.upload = async (req, res) => {
+  const file = req.file; // 获取上传文件
+  const fileArr = file.originalname.split('.')
+  const mimeType = fileArr[fileArr.length - 1]
+  const bucketName = 'test'; //自己创建的桶名
+  const objectName = `${Date.now()}.${mimeType}`; // 设置对象名称
+  const data = await minioClient.putObject(bucketName, objectName, file.buffer); // 上传到MinIO
+  console.log(data);
+  res.status(200).json({
+    url: `http://127.0.0.1:9000/${bucketName}/${objectName}`
   })
 }

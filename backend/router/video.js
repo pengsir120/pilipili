@@ -6,6 +6,8 @@ const validator = require('../middleware/validator/videoValidator')
 const {
   verifyToken
 } = require('../utils/jwt')
+const multer = require('multer')
+const upload = multer()
 
 router
   .get('/gethots/:topnum', videoController.getHots)
@@ -22,4 +24,5 @@ router
   .get('/getvod', verifyToken(), vodController.getvod)
   .put('/updatevideo/:videoId', verifyToken(), videoController.updatevideo)
   .post('/createvideo', verifyToken(), validator.video, videoController.createvideo)
+  .post('/upload', verifyToken(), upload.single('file'), videoController.upload)
 module.exports = router
