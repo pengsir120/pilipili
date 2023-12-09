@@ -133,17 +133,21 @@ const videoDetail = ref({})
 
 const plyrOptions = ref(null)
 const getVideoDetail = () => {
-  $request({
-    url: `/api/v1/video/video/${route.query.videoId}`
-  }).then(res => {
-    videoDetail.value = res.data
+  // $request({
+  //   url: `/api/v1/video/video/${route.query.videoId}`
+  // }).then(res => {
+  //   videoDetail.value = res.data
 
-    plyrOptions.value = {
-      ...res.data,
-      source: res.data.vod.PlayInfoList.PlayInfo[0]['PlayURL'],
-      poster: res.data.cover
-    }
-  })
+  //   plyrOptions.value = {
+  //     ...res.data,
+  //     source: res.data.vod.PlayInfoList.PlayInfo[0]['PlayURL'],
+  //     poster: res.data.cover
+  //   }
+  // })
+  plyrOptions.value = {
+    source: route.query.url,
+    poster: route.query.cover
+  }
 }
 
 const isFocus = ref(false)

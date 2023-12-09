@@ -37,7 +37,9 @@ const handleItemClick = (item) => {
   router.push({
     path: '/detail',
     query: {
-      videoId: item._id
+      videoId: item._id,
+      cover: item.cover,
+      url: item.url
     }
   })
 }

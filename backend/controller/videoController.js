@@ -7,7 +7,7 @@ const {
 } = require("../model")
 const { hotInc, topHots } = require('../model/redis/redishotsinc')
 // 观看 +1 点赞 +2 评论 +2 收藏 +3
-const { getvodPlay } = require('../controller/vodController')
+// const { getvodPlay } = require('../controller/vodController')
 const minioClient = require('../utils/minio')
 
 exports.getHots = async (req, res) => {
@@ -246,12 +246,6 @@ exports.videolist = async (req, res) => {
     })
     .populate('user', '_id cover username')
   console.log(videolist);
-  for(let i = 0; i < videolist.length; i++) {
-    if(videolist[i].vodvideoId) {
-      const vodInfo = await getvodPlay(videolist[i].vodvideoId)
-    videolist[i].cover = vodInfo.VideoBase.CoverURL
-    }
-  }
 
   const total = await Video.where(filter).countDocuments()
   res.status(200).json({
@@ -260,56 +254,56 @@ exports.videolist = async (req, res) => {
   })
 }
 
-exports.video = async (req, res) => {
-  const {
-    videoId
-  } = req.params
-  let videoInfo = await Video.findById(videoId).populate('user', [
-    'cover', 
-    'username',
-    'image',
-    'channeldes',
-    'subscribeCount'
-  ])
-  videoInfo = videoInfo.toJSON()
-  if(videoInfo) {
-    const vodInfo = await getvodPlay(videoInfo.vodvideoId)
-    videoInfo.vod = vodInfo
-  }else {
-    return res.status(501).json({
-      err: '视频不存在'
-    })
-  }
+// exports.video = async (req, res) => {
+//   const {
+//     videoId
+//   } = req.params
+//   let videoInfo = await Video.findById(videoId).populate('user', [
+//     'cover', 
+//     'username',
+//     'image',
+//     'channeldes',
+//     'subscribeCount'
+//   ])
+//   videoInfo = videoInfo.toJSON()
+//   if(videoInfo) {
+//     const vodInfo = await getvodPlay(videoInfo.vodvideoId)
+//     videoInfo.vod = vodInfo
+//   }else {
+//     return res.status(501).json({
+//       err: '视频不存在'
+//     })
+//   }
 
-  videoInfo.islike = false
-  videoInfo.isDislike = false
-  videoInfo.isSubscribe = false
-  if (req.user) {
-    const userId = req.user._id
-    if (await Videolike.findOne({
-        user: userId,
-        video: videoId,
-        like: 1
-      })) {
-      videoInfo.islike = true
-    }
-    if (await Videolike.findOne({
-        user: userId,
-        video: videoId,
-        like: -1
-      })) {
-      videoInfo.isDislike = true
-    }
-    if (await Subscribe.findOne({
-        user: userId,
-        channel: videoInfo.user
-      })) {
-      videoInfo.isSubscribe = true
-    }
-  }
-  await hotInc(videoId, 1)
-  res.status(200).json(videoInfo)
-}
+//   videoInfo.islike = false
+//   videoInfo.isDislike = false
+//   videoInfo.isSubscribe = false
+//   if (req.user) {
+//     const userId = req.user._id
+//     if (await Videolike.findOne({
+//         user: userId,
+//         video: videoId,
+//         like: 1
+//       })) {
+//       videoInfo.islike = true
+//     }
+//     if (await Videolike.findOne({
+//         user: userId,
+//         video: videoId,
+//         like: -1
+//       })) {
+//       videoInfo.isDislike = true
+//     }
+//     if (await Subscribe.findOne({
+//         user: userId,
+//         channel: videoInfo.user
+//       })) {
+//       videoInfo.isSubscribe = true
+//     }
+//   }
+//   await hotInc(videoId, 1)
+//   res.status(200).json(videoInfo)
+// }
 
 exports.createvideo = async (req, res) => {
   const body = req.body

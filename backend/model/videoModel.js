@@ -10,10 +10,10 @@ const videoSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  vodvideoId: {
-    type: String,
-    required: false
-  },
+  // vodvideoId: {
+  //   type: String,
+  //   required: false
+  // },
   user: {
     type: mongoose.ObjectId,
     required: true,
