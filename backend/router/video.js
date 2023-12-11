@@ -20,7 +20,7 @@ router
   .post('/comment/:videoId', verifyToken(), videoController.comment)
   .get('/videolist', videoController.videolist)
   .get('/video/:videoId', verifyToken(false), videoController.video)
-  .get('/getvodplay', vodController.getPlay)
+  // .get('/getvodplay', vodController.getPlay)
   // .get('/getvod', verifyToken(), vodController.getvod)
   .put('/updatevideo/:videoId', verifyToken(), videoController.updatevideo)
   .post('/createvideo', verifyToken(), validator.video, videoController.createvideo)
