@@ -1,10 +1,10 @@
 module.exports = {
   createAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   updateAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
 }

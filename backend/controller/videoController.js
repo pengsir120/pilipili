@@ -309,8 +309,8 @@ exports.video = async (req, res) => {
 exports.createvideo = async (req, res) => {
   const body = req.body
   body.user = req.user._id
-  body.createAt = Date.now()
-  body.updateAt = Date.now()
+  // body.createAt = Date.now()
+  // body.updateAt = Date.now()
 
   const videoModel = new Video(body)
   try {
