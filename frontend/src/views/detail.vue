@@ -140,15 +140,9 @@ const getVideoDetail = () => {
 
     plyrOptions.value = {
       ...res.data,
-      // source: res.data.vod.PlayInfoList.PlayInfo[0]['PlayURL'],
-      source: res.data.url,
       poster: res.data.cover
     }
   })
-  // plyrOptions.value = {
-  //   source: route.query.url,
-  //   poster: route.query.cover
-  // }
 }
 
 const isFocus = ref(false)

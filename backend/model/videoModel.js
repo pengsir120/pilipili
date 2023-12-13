@@ -39,6 +39,11 @@ const videoSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  sources: {
+    type: Array,
+    required: false,
+    default: []
+  },
   ...baseModel,
 })
 

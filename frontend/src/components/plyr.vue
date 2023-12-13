@@ -1,7 +1,5 @@
 <template>
-  <video id="plyr-player" playsinline controls :data-poster="options.poster">
-    <source :src="options.source" type="video/mp4" />
-
+  <video id="plyr-player" playsinline controls>
       <!-- Captions are optional -->
     <!-- <track kind="captions" label="English captions" src="/path/to/captions.vtt" srclang="en" default /> -->
   </video>
@@ -119,7 +117,20 @@ onMounted(() => {
   //     },
   //   ],
   // },
-});
+  });
+  const { url, poster, title, sources } = props.options
+  player.source = {
+    type: 'video',
+    poster,
+    title,
+    sources: sources.length ? sources : [
+      {
+        src: url,
+        type: 'video/mp4',
+        size: 1080,
+      },
+    ],
+}
 })
 
 
