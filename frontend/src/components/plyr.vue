@@ -51,7 +51,7 @@ onMounted(() => {
     menuBack: 'Go back to previous menu',
     speed: '倍速',
     normal: '1.0',
-    quality: 'Quality',
+    quality: '画质',
     loop: 'Loop',
     start: 'Start',
     end: 'End',
