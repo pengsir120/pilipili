@@ -264,7 +264,8 @@ exports.video = async (req, res) => {
     'image',
     'channeldes',
     'subscribeCount',
-    'url'
+    'url',
+    'description'
   ])
   videoInfo = videoInfo.toJSON()
   if(videoInfo) {
