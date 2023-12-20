@@ -168,8 +168,8 @@
                 <div >
 
                 </div>
-                <span></span>
-                <span></span>
+                <!-- <span class="opacity-0 absolute top-0 left-0 w-full h-full"></span> -->
+                <span class="text-[14px] text-white leading-[21px] h-[21px] absolute right-1.5 bottom-1.5 bg-duration-color rounded-sm py-0 px-1">1:34</span>
               </div>
             </div>
             <div></div>

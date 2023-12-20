@@ -9,4 +9,22 @@ const minioClient = new Minio.Client({
   secretKey
 });
 
+(async () => {
+  minioClient.bucketExists('test', (err, exists) => {
+    if(err) {
+      console.log(err)
+    }
+    if(exists) {
+      console.log('Bucker exists')
+    }else {
+      minioClient.makeBucket('test', 'zh-east-1', function(err) {
+        if(err) {
+          console.log(err)
+        }
+        console.log('Bucket created successfully in zh-east-1')
+      })
+    }
+  })
+})()
+
 module.exports = minioClient
