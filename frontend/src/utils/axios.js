@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const service = axios.create({
-  baseURL: import.meta.env.VITE_APP_API_BASE, // 域名配置
+  baseURL: `${import.meta.env.VITE_APP_API_BASE}/api/v1`, // 域名配置
   timeout: 50000
 })
 

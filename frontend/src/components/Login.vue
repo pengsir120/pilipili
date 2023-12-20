@@ -107,7 +107,7 @@ const { $request } = userGetGlobalProperties()
 
 const handleLogin = () => {
   $request({
-    url: '/api/v1/user/logins',
+    url: '/user/logins',
     method: 'POST',
     data: {
       email: email.value,

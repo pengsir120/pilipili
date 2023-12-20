@@ -15,7 +15,7 @@ const videoList = ref({})
 
 const getVideoList = (params = {}) => {
   $request({
-    url: '/api/v1/video/videolist',
+    url: '/video/videolist',
     params: {
       pageNum: 1,
       pageSize: 20,
