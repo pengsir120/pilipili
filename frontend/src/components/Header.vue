@@ -203,7 +203,7 @@
             <span>创作中心</span>
           </a>
         </li>
-        <li class="shrink-0 min-w-50 text-white text-center cursor-pointer">
+        <li @click="handleUploadVideo" class="shrink-0 min-w-50 text-white text-center cursor-pointer">
           <div class="flex items-center justify-center ml-4 w-[90px] h-[34px] rounded-lg bg-[#fb7299] text-center text-sm leading-5 ">
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-[5px] header-upload-entry__icon"><path d="M12.0824 10H14.1412C15.0508 10 15.7882 10.7374 15.7882 11.6471V12.8824C15.7882 13.792 15.0508 14.5294 14.1412 14.5294H3.84707C2.93743 14.5294 2.20001 13.792 2.20001 12.8824V11.6471C2.20001 10.7374 2.93743 10 3.84707 10H5.90589" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8.99413 11.2353L8.99413 3.82353" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.0823 6.29413L8.9941 3.20589L5.90587 6.29413" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             <span>投稿</span>
@@ -215,12 +215,13 @@
 
 <script setup>
 import Login from './login.vue'
-import useCommandComponent from '../utils/useCommandComponent'
+import useCommandComponent from '@/utils/useCommandComponent'
 import { useStore } from "vuex"
 import { ref, computed, defineProps } from "vue"
-import userGetGlobalProperties from '../utils/userGetGlobalProperties'
+import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRouter, useRoute } from 'vue-router'
 import popover from './popover.vue'
+import getVideoTime from '@/utils/getVideoTime'
 
 defineProps({
   isIndex: {
@@ -233,6 +234,7 @@ defineProps({
 
 const vuexStore = useStore()
 const user = computed(() => vuexStore.state.user)
+const { $bus, $request } = userGetGlobalProperties()
 
 const loginForm = useCommandComponent(Login)
 const handleLogin = () => {
@@ -264,7 +266,6 @@ const handleLogout = () => {
   vuexStore.commit('LOG_OUT')
 }
 
-const { $bus } = userGetGlobalProperties()
 const searchVal = ref('')
 const handleSearch = () => {
   $bus?.emit('getVideoList', {title: searchVal.value})
@@ -275,5 +276,32 @@ const backHomePage = () => {
   router.push({
     name: 'home'
   })
+}
+
+const handleUploadVideo = () => {
+  const input = document.createElement("input")
+  input.setAttribute("type", "file")
+  input.setAttribute("accept", "video/*")
+  input.onchange = async (event) => {
+    const file = event.target.files[0]
+    const video = document.createElement("video")
+    video.preload = 'metadata'
+    video.src = URL.createObjectURL(file)
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(video.src)
+      const formData = new FormData()
+      formData.append("file", file)
+      // formData.append("metaData", {
+      //   duration: getVideoTime(video.duration)
+      // })
+      $request({
+        url: "/video/upload",
+        method: "post",
+        formData
+      })
+    }
+  }
+  input.click()
+  input.remove()
 }
 </script>
