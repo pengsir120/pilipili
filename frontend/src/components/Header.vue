@@ -291,13 +291,16 @@ const handleUploadVideo = () => {
       URL.revokeObjectURL(video.src)
       const formData = new FormData()
       formData.append("file", file)
-      // formData.append("metaData", {
-      //   duration: getVideoTime(video.duration)
-      // })
+      formData.append("metaData", JSON.stringify({
+        duration: getVideoTime(video.duration)
+      }))
       $request({
         url: "/video/upload",
         method: "post",
-        formData
+        data: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       })
     }
   }
