@@ -9,6 +9,8 @@ import store from './store'
 import mitt from 'mitt'
 import router from './router/index'
 import popover from '@/utils/popover'
+import Antd from 'ant-design-vue'
+// import 'ant-design-vue/dist/antd.css'
 
 const Mit = mitt()
 
@@ -17,4 +19,4 @@ app.directive('popover', popover)
 app.config.globalProperties.$request = axios
 app.config.globalProperties.$moment = moment
 app.config.globalProperties.$bus = Mit
-app.use(store).use(router).mount('#app')
+app.use(store).use(router).use(Antd).mount('#app')
