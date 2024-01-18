@@ -212,14 +212,14 @@
     </ul>
 
   </header>
-  <UploadVideo />
+  <UploadVideo ref="uploadVideo" />
 </template>
 
 <script setup>
 import Login from './login.vue'
 import useCommandComponent from '@/utils/useCommandComponent'
 import { useStore } from "vuex"
-import { ref, computed, defineProps } from "vue"
+import { ref, computed, defineProps, onMounted } from "vue"
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRouter, useRoute } from 'vue-router'
 import popover from './popover.vue'
@@ -281,33 +281,42 @@ const backHomePage = () => {
   })
 }
 
+const uploadVideo = ref(null)
+
 const handleUploadVideo = () => {
-  const input = document.createElement("input")
-  input.setAttribute("type", "file")
-  input.setAttribute("accept", "video/*")
-  input.onchange = async (event) => {
-    const file = event.target.files[0]
-    const video = document.createElement("video")
-    video.preload = 'metadata'
-    video.src = URL.createObjectURL(file)
-    video.onloadedmetadata = () => {
-      URL.revokeObjectURL(video.src)
-      const formData = new FormData()
-      formData.append("file", file)
-      formData.append("metaData", JSON.stringify({
-        duration: getVideoTime(video.duration)
-      }))
-      $request({
-        url: "/video/upload",
-        method: "post",
-        data: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-    }
-  }
-  input.click()
-  input.remove()
+  uploadVideo.value.show()
+  // const input = document.createElement("input")
+  // input.setAttribute("type", "file")
+  // input.setAttribute("accept", "video/*")
+  // input.onchange = async (event) => {
+  //   const file = event.target.files[0]
+  //   const video = document.createElement("video")
+  //   video.preload = 'metadata'
+  //   video.src = URL.createObjectURL(file)
+  //   video.onloadedmetadata = () => {
+  //     URL.revokeObjectURL(video.src)
+  //     const formData = new FormData()
+  //     formData.append("file", file)
+  //     formData.append("metaData", JSON.stringify({
+  //       duration: getVideoTime(video.duration)
+  //     }))
+  //     $request({
+  //       url: "/video/upload",
+  //       method: "post",
+  //       data: formData,
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     })
+  //   }
+  // }
+  // input.click()
+  // input.remove()
 }
+
+
+
+onMounted(() => {
+  // uploadVideo.value.show()
+})
 </script>
