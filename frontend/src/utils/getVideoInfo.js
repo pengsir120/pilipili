@@ -1,5 +1,5 @@
 // 将视频时长(秒)转化为时分秒的形式
-export default function getVideoTime(seconds) {
+export function getVideoTime(seconds) {
   let secondTime = parseInt(seconds) // 秒
   let minuteTime = 0 // 分
   let hourTime = 0 // 时
@@ -38,4 +38,37 @@ export default function getVideoTime(seconds) {
     result = `00:${result}`
   }
   return result
+}
+
+// videoFile: 要解析的视频文件资源， time: 获取视频某一时刻的画面
+export function captureFrame(videoFile, time = 0) {
+  return new Promise((resolve) => {
+    // 因为dom节点没有渲染到浏览器，视频播放到指定的时间就会停止播放
+    const videoElement = document.createElement('video');
+    videoElement.currentTime = time; // 设置截取的帧时间
+    // 自动播放存在兼容性问题，设置静音解决自动播放在不同浏览器的兼容性问题
+    videoElement.muted = true; 
+    videoElement.autoplay = true;
+    videoElement.src = URL.createObjectURL(videoFile);
+    videoElement.oncanplay = async function () {
+      const flame = await drawVideoToCanvas(videoElement);
+      resolve(flame); 
+    };
+  });
+}
+
+export function drawVideoToCanvas(video) {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob((blob) => {
+      resolve({
+        blob, // 将封面提交到服务端
+        url: URL.createObjectURL(blob), // 实现本地预览
+      });
+    });
+  });
 }

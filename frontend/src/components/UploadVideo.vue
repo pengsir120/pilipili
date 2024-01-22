@@ -27,7 +27,7 @@
 <script setup>
 import { ref } from "vue"
 import { PlusOutlined } from '@ant-design/icons-vue';
-import getVideoTime from '@/utils/getVideoTime'
+import { getVideoTime } from '@/utils/getVideoInfo'
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 
 const { $bus, $request } = userGetGlobalProperties()

@@ -223,7 +223,7 @@ import { ref, computed, defineProps, onMounted } from "vue"
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRouter, useRoute } from 'vue-router'
 import popover from './popover.vue'
-import getVideoTime from '@/utils/getVideoTime'
+import { getVideoTime } from '@/utils/getVideoInfo'
 import UploadVideo from './UploadVideo.vue'
 
 defineProps({
