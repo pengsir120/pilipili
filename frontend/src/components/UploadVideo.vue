@@ -23,7 +23,7 @@
       <a-form-item label="时长" name="duration">
         <a-input disabled v-model:value="form.duration" />
       </a-form-item>
-      <a-form-item label="上传">
+      <a-form-item label="上传视频">
         <a-upload v-model:file-list="fileList" :customRequest="uploadVideo" @remove="uploadRemove" list-type="picture-card">
           <div v-if="fileList.length < 1">
             <PlusOutlined />
@@ -32,13 +32,14 @@
         </a-upload>
       </a-form-item>
     </a-form>
+    <img :src="form.cover" />
   </a-modal>
 </template>
 
 <script setup>
 import { ref } from "vue"
 import { PlusOutlined } from '@ant-design/icons-vue';
-import { getVideoTime } from '@/utils/getVideoInfo'
+import { getVideoTime, captureFrame } from '@/utils/getVideoInfo'
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 
 const { $bus, $request } = userGetGlobalProperties()
@@ -83,17 +84,25 @@ const handleOk = () => {
   
 }
 
+const cover = ref('')
+
 const uploadVideo = async ({file, onProgress, onSuccess}) => {
   const video = document.createElement("video")
   video.preload = 'metadata'
   video.src = URL.createObjectURL(file)
   const reqData = await new Promise((resolve, reject) => {
-    video.onloadedmetadata = () => {
+    video.onloadedmetadata = async () => {
+      // 视频时长
       URL.revokeObjectURL(video.src)
       const formData = new FormData()
       formData.append("file", file)
       const duration = getVideoTime(video.duration)
       form.value.duration = duration
+
+      // 视频封面
+      const coverInfo = await captureFrame(file, Math.random() * video.duration)
+      form.value.cover = coverInfo.url
+
       formData.append("metaData", JSON.stringify({
         duration
       }))

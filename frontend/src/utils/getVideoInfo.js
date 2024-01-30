@@ -57,7 +57,7 @@ export function captureFrame(videoFile, time = 0) {
   });
 }
 
-export function drawVideoToCanvas(video) {
+function drawVideoToCanvas(video) {
   return new Promise((resolve) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
