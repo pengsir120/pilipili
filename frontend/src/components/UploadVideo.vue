@@ -1,20 +1,31 @@
 <template>
-  <a-modal v-model:open="visible" @ok="handleOk" :zIndex="2000">
+  <a-modal 
+    v-model:open="visible" 
+    @ok="handleOk" 
+    @cancel="handleCancel" 
+    title="创建视频" 
+    :zIndex="2000"
+    okText="创建"
+    cancelText="取消"
+  >
     <a-form
+      ref="formRef"
+      :model="form"
+      :rules="rules"
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
       layout="horizontal"
       style="max-width: 600px"
     >
-      <a-form-item label="标题">
+      <a-form-item label="标题" name="title">
         <a-input v-model:value="form.title" />
       </a-form-item>
-      <a-form-item label="时长">
+      <a-form-item label="时长" name="duration">
         <a-input disabled v-model:value="form.duration" />
       </a-form-item>
       <a-form-item label="上传">
-        <a-upload :customRequest="uploadVideo" list-type="picture-card">
-          <div>
+        <a-upload v-model:file-list="fileList" :customRequest="uploadVideo" @remove="uploadRemove" list-type="picture-card">
+          <div v-if="fileList.length < 1">
             <PlusOutlined />
             <div style="margin-top: 8px">Upload</div>
           </div>
@@ -32,30 +43,45 @@ import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 
 const { $bus, $request } = userGetGlobalProperties()
 
+const labelCol = { style: { width: '150px' } };
+const wrapperCol = { span: 14 };
 const visible = ref(false)
-
-const handleOk = () => {
-  $request({
-    url: '/video/createvideo',
-    method: 'POST',
-    data: form.value
-  }).then(res => {
-    console.log(res);
-    if(res.status == 201) {
-      $bus.emit('getVideoList')
-      visible.value = false
-    }
-  })
-}
+const form = ref({})
+const fileList = ref([])
+const formRef = ref()
+const rules = ref({
+  title: [{ required: true, message: '请输入标题', trigger: 'change' }],
+  duration: [{ required: true, message: '请上传视频', trigger: 'change' }],
+})
 
 const show = () => {
   visible.value = true
 }
+const handleCancel = () => {
+  form.value = {}
+  fileList.value = []
+  formRef.value.resetFields()
+  visible.value = false
+}
+const uploadRemove = () => {
+  form.value.duration = undefined
+}
 
-const labelCol = { style: { width: '150px' } };
-const wrapperCol = { span: 14 };
-
-const form = ref({})
+const handleOk = () => {
+  formRef.value.validate().then(() => {
+    $request({
+      url: '/video/createvideo',
+      method: 'POST',
+      data: form.value
+    }).then(res => {
+      if(res.status == 201) {
+        $bus.emit('getVideoList')
+        handleCancel()
+      }
+    })
+  })
+  
+}
 
 const uploadVideo = async ({file, onProgress, onSuccess}) => {
   const video = document.createElement("video")
@@ -75,7 +101,6 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
     }
   })
   
-
   const res = await $request({
     url: "/video/upload",
     method: "post",
