@@ -32,7 +32,6 @@
         </a-upload>
       </a-form-item>
     </a-form>
-    <img :src="form.cover" />
   </a-modal>
 </template>
 
@@ -101,7 +100,18 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
 
       // 视频封面
       const coverInfo = await captureFrame(file, Math.random() * video.duration)
-      form.value.cover = coverInfo.url
+
+      const picFormData = new FormData()
+      picFormData.append('file', coverInfo.blob)
+      const picRes = await $request({
+        url: "/video/upload",
+        method: "post",
+        data: picFormData,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      form.value.cover = picRes.data.url
 
       formData.append("metaData", JSON.stringify({
         duration

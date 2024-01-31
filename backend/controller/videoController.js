@@ -333,13 +333,13 @@ exports.updatevideo = async (req, res) => {
 }
 
 exports.upload = async (req, res) => {
-  const file = req.file; // 获取上传文件
+  const { buffer, mimetype } = req.file; // 获取上传文件
   const metaData = req.body.metaData
-  const fileArr = file.originalname.split('.')
-  const mimeType = fileArr[fileArr.length - 1]
+  // const fileArr = file.originalname.split('.')
+  // const mimeType = fileArr[fileArr.length - 1]
   const bucketName = 'test'; //自己创建的桶名
-  const objectName = `${Date.now()}.${mimeType}`; // 设置对象名称
-  const data = await minioClient.putObject(bucketName, objectName, file.buffer, metaData ? JSON.parse(metaData) : undefined); // 上传到MinIO
+  const objectName = `${Date.now()}.${mimetype.split('/')[1]}`; // 设置对象名称
+  const data = await minioClient.putObject(bucketName, objectName, buffer, metaData ? JSON.parse(metaData) : undefined); // 上传到MinIO
   res.status(200).json({
     url: `http://127.0.0.1:9000/${bucketName}/${objectName}`
   })
