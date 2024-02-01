@@ -66,9 +66,11 @@ function drawVideoToCanvas(video) {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     canvas.toBlob((blob) => {
       resolve({
-        blob, // 将封面提交到服务端
+        file: new File([blob], `${Date.now()}.png`, {
+          type: 'image/png'
+        }), // 将封面提交到服务端
         url: URL.createObjectURL(blob), // 实现本地预览
       });
-    });
+    }, 'image/png');
   });
 }

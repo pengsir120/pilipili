@@ -85,51 +85,90 @@ const handleOk = () => {
 
 const cover = ref('')
 
+// const uploadVideo = async ({file, onProgress, onSuccess}) => {
+//   const video = document.createElement("video")
+//   video.preload = 'metadata'
+//   video.src = URL.createObjectURL(file)
+//   const reqData = await new Promise((resolve, reject) => {
+//     video.onloadedmetadata = async () => {
+//       // 视频时长
+//       URL.revokeObjectURL(video.src)
+//       const formData = new FormData()
+//       formData.append("file", file)
+//       const duration = getVideoTime(video.duration)
+//       form.value.duration = duration
+
+//       // 视频封面
+//       const coverInfo = await captureFrame(file, Math.random() * video.duration)
+
+//       const picFormData = new FormData()
+//       picFormData.append('file', coverInfo.file)
+//       const picRes = await $request({
+//         url: "/video/upload",
+//         method: "post",
+//         data: picFormData,
+//         headers: {
+//           'Content-Type': 'multipart/form-data'
+//         }
+//       })
+//       form.value.cover = picRes.data.url
+
+//       formData.append("metaData", JSON.stringify({
+//         duration
+//       }))
+//       resolve(formData)
+//     }
+//   })
+  
+//   const res = await $request({
+//     url: "/video/upload",
+//     method: "post",
+//     data: reqData,
+//     headers: {
+//       'Content-Type': 'multipart/form-data'
+//     }
+//   })
+//   form.value.url = res.data.url
+//   onSuccess()
+// }
+
 const uploadVideo = async ({file, onProgress, onSuccess}) => {
   const video = document.createElement("video")
   video.preload = 'metadata'
   video.src = URL.createObjectURL(file)
-  const reqData = await new Promise((resolve, reject) => {
-    video.onloadedmetadata = async () => {
-      // 视频时长
-      URL.revokeObjectURL(video.src)
-      const formData = new FormData()
-      formData.append("file", file)
-      const duration = getVideoTime(video.duration)
-      form.value.duration = duration
+  video.onloadedmetadata = async () => {
+    // 视频时长
+    URL.revokeObjectURL(video.src)
+    const duration = getVideoTime(video.duration)
+    form.value.duration = duration
 
-      // 视频封面
-      const coverInfo = await captureFrame(file, Math.random() * video.duration)
+    // 视频封面
+    const coverInfo = await captureFrame(file, Math.random() * video.duration)
+    const picFormData = new FormData()
+    picFormData.append('file', coverInfo.file)
+    const picRes = await $request({
+      url: "/video/upload",
+      method: "post",
+      data: picFormData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    form.value.cover = picRes.data.url
 
-      const picFormData = new FormData()
-      picFormData.append('file', coverInfo.blob)
-      const picRes = await $request({
-        url: "/video/upload",
-        method: "post",
-        data: picFormData,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      form.value.cover = picRes.data.url
-
-      formData.append("metaData", JSON.stringify({
-        duration
-      }))
-      resolve(formData)
-    }
-  })
-  
-  const res = await $request({
-    url: "/video/upload",
-    method: "post",
-    data: reqData,
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-  form.value.url = res.data.url
-  onSuccess()
+    const videoFormData = new FormData()
+    videoFormData.append("file", file)
+    const res = await $request({
+      url: "/video/upload",
+      method: "post",
+      data: videoFormData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    form.value.url = res.data.url
+    onSuccess()
+  }
 }
 
 defineExpose({
