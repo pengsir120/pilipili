@@ -65,11 +65,13 @@ function drawVideoToCanvas(video) {
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     canvas.toBlob((blob) => {
+      const picName = `${Date.now()}.png`
       resolve({
-        file: new File([blob], `${Date.now()}.png`, {
+        file: new File([blob], picName, {
           type: 'image/png'
         }), // 将封面提交到服务端
         url: URL.createObjectURL(blob), // 实现本地预览
+        name: picName
       });
     }, 'image/png');
   });
