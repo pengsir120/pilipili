@@ -44,6 +44,10 @@ const videoSchema = new mongoose.Schema({
     required: false,
     default: []
   },
+  duration: {
+    type: String,
+    required: true
+  },
   ...baseModel,
 })
 

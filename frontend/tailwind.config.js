@@ -32,6 +32,8 @@ export default {
         'regal-gray': '#9499A0',
         'theme-color': '#ff9000',
         'duration-color': 'rgba(0, 0, 0, 0.4)',
+        'cover-top': 'rgba(0, 0, 0, 0)',
+        'cover-bottom': 'rgba(0, 0, 0, .8)',
       },
       zIndex: {
         '10010': '10010'
