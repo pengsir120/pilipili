@@ -271,6 +271,7 @@ exports.video = async (req, res) => {
   if(videoInfo) {
     // const vodInfo = await getvodPlay(videoInfo.vodvideoId)
     // videoInfo.vod = vodInfo
+    await Video.findByIdAndUpdate(videoId, { playCount: ++videoInfo.playCount }, { new: true })
   }else {
     return res.status(501).json({
       err: '视频不存在'

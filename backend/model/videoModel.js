@@ -48,6 +48,10 @@ const videoSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  playCount: {
+    type: Number,
+    default: 0,
+  },
   ...baseModel,
 })
 
