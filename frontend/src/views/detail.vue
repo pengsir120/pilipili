@@ -165,6 +165,7 @@
           <div class="flex">
             <div class="w-[189px] h-[107px] relative rounded-md bg-[#C9CCD0] grow-0 shrink-0 basis-auto">
               <div class="relative overflow-hidden rounded-md w-full h-full">
+                <img class="w-full h-full" :src="item.cover" />
                 <div >
 
                 </div>
