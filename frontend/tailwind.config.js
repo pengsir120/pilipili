@@ -34,7 +34,7 @@ export default {
         'duration-color': 'rgba(0, 0, 0, 0.4)',
         'cover-top': 'rgba(0, 0, 0, 0)',
         'cover-bottom': 'rgba(0, 0, 0, .8)',
-        'play-btn': 'hsla(0,0%,100%,.8)',
+        'control-color': 'hsla(0,0%,100%,.8)',
       },
       zIndex: {
         '10010': '10010'
@@ -92,6 +92,9 @@ export default {
         '3xl': '1792px',
         '4xl': '2048px',
         '5xl': '2200px'
+      },
+      fontFamily: {
+        'harmony-font': ["-apple-system", "BlinkMacSystemFont", "Helvetica", "Neue", "Helvetica", "Arial", "PingFang SC", "Hiragino", "Sans GB", "Microsoft YaHei", "sans-serif"]
       }
     },
   },
