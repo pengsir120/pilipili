@@ -17,6 +17,7 @@
     "plyr": "^3.7.8",
     "vue": "^3.3.4",
     "vue-router": "4",
+    "vue3-danmaku": "^1.6.0",
     "vuex": "^4.1.0",
     "vuex-persistedstate": "^4.1.0"
   },

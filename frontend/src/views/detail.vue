@@ -31,14 +31,15 @@
         </div>
       </div>
       <div class="relative h-[657px] 4xl:h-[1009px]">
-        <div class="absolute z-0 w-full h-full flex flex-col flex-nowrap shadow-[0_0_8px_0_#F1F2F3]">
+        <!-- <div class="absolute z-0 w-full h-full flex flex-col flex-nowrap shadow-[0_0_8px_0_#F1F2F3]">
           <div class="relative flex-1 overflow-hidden bg-black">
             <Plyr v-if="plyrOptions" :options="plyrOptions" class="w-full h-full"></Plyr>
           </div>
           <div class="h-[56px] relative flex items-center py-0 px-3 bg-white">
 
           </div>
-        </div>
+        </div> -->
+        <PilipiliPlayer v-if="plyrOptions" :options="plyrOptions"></PilipiliPlayer>
       </div>
       <div class="mt-6 z-0 relative">
         <div>
@@ -109,7 +110,7 @@
         </div>
       </div>
     </div>
-    <div class="relative w-[411px] ml-[30px] flex-none pointer-events-none">
+    <div class="relative w-[411px] ml-[30px] flex-none pointer-events-none hidden">
       <!-- up主信息 -->
       <div class="pointer-events-auto">
         <div class="h-[108px] box-border flex items-center">
@@ -204,6 +205,7 @@ import { useRoute } from 'vue-router'
 import { onMounted, ref, onBeforeUnmount, computed } from 'vue'
 import { useStore } from "vuex"
 import Plyr from '@/components/plyr.vue'
+import PilipiliPlayer from '@/components/pilipiliPlayer.vue'
 
 const { $request } = userGetGlobalProperties()
 const vuexStore = useStore()

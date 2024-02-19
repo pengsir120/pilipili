@@ -1176,6 +1176,11 @@ vue-types@^3.0.0:
   dependencies:
     is-plain-object "3.0.1"
 
+vue3-danmaku@^1.6.0:
+  version "1.6.0"
+  resolved "http://219.135.209.147:4873/vue3-danmaku/-/vue3-danmaku-1.6.0.tgz#bcf3f5e0f8194e42f062d1a6c5b4209aa9468f0f"
+  integrity sha512-XjwVKIelupDD3PWn6k22l5qS8y+SCdFUYq4sSpcPInqk7CyzXWSAfz2BL6WWx9HU9CRWS3x2oDMkepLkJoWvNQ==
+
 vue@^3.3.4:
   version "3.3.4"
   resolved "http://219.135.209.147:4873/vue/-/vue-3.3.4.tgz"
