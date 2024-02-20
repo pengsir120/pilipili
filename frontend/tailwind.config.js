@@ -35,6 +35,9 @@ export default {
         'cover-top': 'rgba(0, 0, 0, 0)',
         'cover-bottom': 'rgba(0, 0, 0, .8)',
         'control-color': 'hsla(0,0%,100%,.8)',
+        'control-time-seek': 'hsla(0,0%,100%,.2)',
+        'quality-menu-wrap': 'hsla(0,0%,8%,.9)',
+        'quality-menu-item': 'hsla(0,0%,100%,.1)',
       },
       zIndex: {
         '10010': '10010'

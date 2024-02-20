@@ -19,7 +19,7 @@
         <div></div>
         <div>
           <div></div>
-          <div class="flex w-full h-[35px] justify-between leading-[22px] mt-5 box-border px-3 transition-all duration-200 ease-out">
+          <div class="flex w-full h-[35px] justify-between leading-[22px] mt-5 px-3 transition-all duration-200 ease-out">
             <div class="inline-flex flex-none">
               <div class="fill-white text-control-color text-[0px] h-[22px] leading-[22px] outline-0 relative text-center w-9 z-[2]">
                 <div class="w-full cursor-pointer">
@@ -28,8 +28,9 @@
                   </span>
                 </div>
               </div>
-              <div class="text-[12px] mr-2.5 min-w-[90px] fill-white text-control-color h-[22px] leading-[22px] outline-0  relative text-center w-9 z-[2]">
-                <div class="h-full absolute text-center whitespace-nowrap w-full font-harmony-font">
+              <div class="text-[12px] mr-2.5 min-w-[90px] fill-white text-control-color h-[22px] leading-[22px] outline-0  relative text-center w-9 z-[2] hover:text-white font-harmony-font">
+                <input ref="timeSeekInp" @blur="handleTimeSeekBlur" value="00:00" :class="{ hidden: !timeSeekFlag }" class="outline-0 no-underline bg-control-time-seek border border-solid border-transparent text-inherit text-[12px] absolute top-0 left-1.5 w-[60px] h-5 leading-5 text-center px-[5px]" />
+                <div @click="handleTimeSeekClick" :class="{ hidden: timeSeekFlag }" class="h-full absolute text-center whitespace-nowrap w-full">
                   <span class="leading-[22px]">00:00</span>
                   <span class="px-0.5 leading-[22px]">
                     /
@@ -37,6 +38,58 @@
                   <span class="leading-[22px]">2:53</span>
                 </div>
               </div>
+            </div>
+            <div></div>
+            <div class="flex justify-end text-white">
+              <!-- 清晰度 -->
+              <div @mouseenter="handleControlHover" @mouseleave="handleControlLeave" class="flex-none text-[12px] mr-3 w-auto fill-white text-control-color h-[22px] leading-[22px] outline-0 relative text-center z-[2] hover:text-white hover:pt-2.5 hover:mt-[-10px] box-content">
+                <div class="cursor-pointer text-[14px] font-semibold">1080P 高清</div>
+                <div class="bg-quality-menu-wrap rounded-sm bottom-[41px] cursor-pointer left-1/2 m-0 max-h-[580px] overflow-hidden p-0 absolute translate-x-[-50%]">
+                  <ul @click="handleSwitchQuality" class="quality-menu hidden outline-0 m-0 p-0">
+                    <li data-value="80" class="flex items-center w-[145px] h-9 py-0 px-3 whitespace-nowrap hover:bg-quality-menu-item text-theme-color">
+                      <span class="pointer-events-none">1080P 高清</span>
+                    </li>
+                    <li data-value="64" class="flex items-center w-[145px] h-9 py-0 px-3 whitespace-nowrap hover:bg-quality-menu-item">
+                      <span class="pointer-events-none">720P 高清</span>
+                    </li>
+                    <li data-value="32" class="flex items-center w-[145px] h-9 py-0 px-3 whitespace-nowrap hover:bg-quality-menu-item">
+                      <span class="pointer-events-none">480P 清晰</span>
+                    </li>
+                    <li data-value="16" class="flex items-center w-[145px] h-9 py-0 px-3 whitespace-nowrap hover:bg-quality-menu-item">
+                      <span class="pointer-events-none">360P 流畅</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="hidden bottom-[50px] absolute"></div>
+              </div>
+              <!-- 倍速 -->
+              <div @mouseenter="handleControlHover" @mouseleave="handleControlLeave" class="text-[14px] mr-3 w-[50px] fill-white text-control-color h-[22px] leading-[22px] outline-0 relative text-center z-[2] hover:text-white hover:pt-2.5 hover:mt-[-10px] box-content">
+                <div class="cursor-pointer font-semibold w-full">
+                  倍速
+                </div>
+                <ul class="playbackrate-menu outline-0 bg-quality-menu-wrap rounded-sm bottom-[41px] hidden left-1/2 m-0 p-0 absolute text-center translate-x-[-50%] w-[70px]">
+                  <li class="cursor-pointer h-9 leading-9 relative hover:bg-quality-menu-item" data-value="2">2.0x</li>
+                  <li class="cursor-pointer h-9 leading-9 relative hover:bg-quality-menu-item" data-value="1.5">1.5x</li>
+                  <li class="cursor-pointer h-9 leading-9 relative hover:bg-quality-menu-item" data-value="1.25">1.25x</li>
+                  <li class="cursor-pointer h-9 leading-9 relative hover:bg-quality-menu-item text-theme-color" data-value="1">1.0x</li>
+                  <li class="cursor-pointer h-9 leading-9 relative hover:bg-quality-menu-item" data-value="0.75">0.75x</li>
+                  <li class="cursor-pointer h-9 leading-9 relative hover:bg-quality-menu-item" data-value="0.5">0.5x</li>
+                </ul>
+              </div>
+              <!-- 字幕 -->
+              <div></div>
+              <!-- 音量 -->
+              <div></div>
+              <!-- 设置 -->
+              <div></div>
+              <!-- 画中画 -->
+              <div></div>
+              <!-- 宽屏 -->
+              <div></div>
+              <!-- 网页全屏 -->
+              <div></div>
+              <!-- 全屏 -->
+              <div></div>
             </div>
           </div>
           <div></div>
@@ -54,7 +107,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, defineProps } from 'vue'
+import { ref, onMounted, onBeforeUnmount, defineProps, nextTick  } from 'vue'
 
 
 const props = defineProps({
@@ -65,6 +118,42 @@ const props = defineProps({
     }
   }
 })
+
+const timeSeekFlag = ref(false)
+const timeSeekInp = ref()
+const handleTimeSeekClick = async () => {
+  timeSeekFlag.value = true
+  await nextTick()
+  timeSeekInp.value.focus()
+}
+const handleTimeSeekBlur = () => {
+  timeSeekFlag.value = false
+}
+
+
+const timer = ref(null)
+const handleControlHover = (event) => {
+  clearTimeout(timer.value)
+  const { target } = event
+  timer.value = setTimeout(() => {
+    target.classList.add('state-show')
+  }, 500);
+}
+
+const handleControlLeave = (event) => {
+  const { target } = event
+  timer.value = setTimeout(() => {
+    target.classList.remove('state-show')
+  }, 500);
+}
+
+
+const handleSwitchQuality = (event) => {
+  clearTimeout(timer.value)
+  const { target } = event
+  target.parentNode.parentNode.parentNode.classList.remove('state-show')
+  console.log(target.dataset.value);
+}
 
 const danmus = ref([
   '我居然看完了', 
@@ -216,3 +305,13 @@ const danmus = ref([
 
 
 </script>
+
+<style scoped>
+.state-show .quality-menu {
+  display: block;
+}
+.state-show .playbackrate-menu {
+  display: block;
+}
+
+</style>
