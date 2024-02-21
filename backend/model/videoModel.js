@@ -45,7 +45,7 @@ const videoSchema = new mongoose.Schema({
     default: []
   },
   duration: {
-    type: String,
+    type: Number,
     required: true
   },
   playCount: {

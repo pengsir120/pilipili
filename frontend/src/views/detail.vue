@@ -171,7 +171,7 @@
 
                 </div>
                 <!-- <span class="opacity-0 absolute top-0 left-0 w-full h-full"></span> -->
-                <span class="text-[14px] text-white leading-[21px] h-[21px] absolute right-1.5 bottom-1.5 bg-duration-color rounded-sm py-0 px-1">{{ item.duration.split(':')[0] == '00' ? item.duration.substring(3) : item.duration }}</span>
+                <span class="text-[14px] text-white leading-[21px] h-[21px] absolute right-1.5 bottom-1.5 bg-duration-color rounded-sm py-0 px-1">{{ getVideoTime(item.duration) }}</span>
               </div>
             </div>
             <div class="text-[14px] leading-4 ml-2.5 flex-1">
@@ -206,6 +206,7 @@ import { onMounted, ref, onBeforeUnmount, computed } from 'vue'
 import { useStore } from "vuex"
 import Plyr from '@/components/plyr.vue'
 import PilipiliPlayer from '@/components/pilipiliPlayer.vue'
+import { getVideoTime } from '@/utils/getVideoInfo.js'
 
 const { $request } = userGetGlobalProperties()
 const vuexStore = useStore()

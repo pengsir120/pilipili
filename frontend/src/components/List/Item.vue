@@ -21,7 +21,7 @@
                 <span>{{data.commentCount}}</span>
               </span>
             </div>
-            <span>{{data.duration.split(':')[0] == '00' ? data.duration.substring(3) : data.duration}}</span>
+            <span>{{getVideoTime(data.duration)}}</span>
           </div>
         </div>
       </div>
@@ -74,6 +74,8 @@
 </template>
 
 <script setup>
+import { getVideoTime } from '@/utils/getVideoInfo.js'
+
 defineProps({
   data: Object,
 });

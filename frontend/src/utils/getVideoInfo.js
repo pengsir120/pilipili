@@ -33,11 +33,12 @@ export function getVideoTime(seconds) {
     // 若小时数是个位数，前面用0补齐
     hourTime = hourTime < 10 ? `0${hourTime}` : hourTime
     result = `${hourTime}:${result}`
-  }else {
-    // 若小时数为0，用"00"表示
-    result = `00:${result}`
   }
   return result
+}
+
+export function simplifyFormatTime(timeStr) {
+  return timeStr.split(':')[0] == '00' ? timeStr.substring(3) : timeStr
 }
 
 // videoFile: 要解析的视频文件资源， time: 获取视频某一时刻的画面
