@@ -202,8 +202,9 @@ const handleTimeUpdate = () => {
 }
 
 const handleProgressDown = (event) => {
-  console.log(getVideoTime(event.offsetX / event.target.clientWidth * props.options.duration));
-  video.value.currentTime = event.offsetX / event.target.clientWidth * props.options.duration
+  let rect = event.currentTarget.getBoundingClientRect()
+  let offsetX = event.clientX - rect.left
+  video.value.currentTime = offsetX / event.target.clientWidth * props.options.duration
 }
 
 const danmus = ref([
