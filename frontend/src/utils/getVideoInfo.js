@@ -37,10 +37,6 @@ export function getVideoTime(seconds) {
   return result
 }
 
-export function simplifyFormatTime(timeStr) {
-  return timeStr.split(':')[0] == '00' ? timeStr.substring(3) : timeStr
-}
-
 // videoFile: 要解析的视频文件资源， time: 获取视频某一时刻的画面
 export function captureFrame(videoFile, time = 0) {
   return new Promise((resolve) => {
