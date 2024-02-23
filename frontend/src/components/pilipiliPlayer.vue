@@ -22,7 +22,7 @@
           <div class="px-3 absolute bottom-[44px] left-0 right-0 transition-opacity duration-200 ease-out">
             <div class="relative">
               <div class="pointer-events-none"></div>
-              <div @mousedown="handleProgressDown" class="items-end cursor-pointer flex h-2.5 pb-1.5">
+              <div ref="progressArea" @mousedown="handleProgressDown" class="items-end cursor-pointer flex h-2.5 pb-1.5">
                 <div class="h-1 items-center flex relative w-full">
                   <div class="w-full h-full absolute">
                     <div class="bg-control-time-seek rounded-[1.5px] overflow-hidden absolute inset-0">
@@ -32,7 +32,7 @@
                   </div>
                   <div class="w-full h-full absolute left-0 top-0 pointer-events-none"></div>
                   <div class="w-5 h-5 pointer-events-none">
-
+                    <div></div>
                   </div>
                   <div></div>
                   <div></div>
@@ -105,7 +105,7 @@
               <!-- 字幕 -->
               <div></div>
               <!-- 音量 -->
-              <div class="fill-white text-control-color w-9 h-[22px] leading-[22px] outline-0 relative text-[0px] text-center z-[2] hover:text-white hover:pt-2.5 hover:mt-[-10px] box-content">
+              <div @mouseenter="handleControlHover(4, $event)" @mouseleave="handleControlLeave(4, $event)" class="fill-white text-control-color w-9 h-[22px] leading-[22px] outline-0 relative text-[0px] text-center z-[2] hover:text-white hover:pt-2.5 hover:mt-[-10px] box-content">
                 <div @click="switchMuted" v-if="!isMuted" class="cursor-pointer w-full">
                   <span class="h-[22px] opacity-90 hover:opacity-100 align-middle inline-flex w-full select-none">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88" width="88" height="88" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; transform: translate3d(0px, 0px, 0px);"><defs><clipPath id="__lottie_element_94"><rect width="88" height="88" x="0" y="0"></rect></clipPath><clipPath id="__lottie_element_96"><path d="M0,0 L88,0 L88,88 L0,88z"></path></clipPath></defs><g clip-path="url(#__lottie_element_94)"><g clip-path="url(#__lottie_element_96)" transform="matrix(1,0,0,1,0,0)" opacity="1" style="display: block;"><g transform="matrix(1,0,0,1,28,44)" opacity="1" style="display: block;"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M15.5600004196167,-25.089000701904297 C15.850000381469727,-24.729000091552734 16,-24.288999557495117 16,-23.839000701904297 C16,-23.839000701904297 16,23.840999603271484 16,23.840999603271484 C16,24.94099998474121 15.100000381469727,25.840999603271484 14,25.840999603271484 C13.550000190734863,25.840999603271484 13.109999656677246,25.680999755859375 12.75,25.400999069213867 C12.75,25.400999069213867 -4,12.00100040435791 -4,12.00100040435791 C-4,12.00100040435791 -8,12.00100040435791 -8,12.00100040435791 C-12.420000076293945,12.00100040435791 -16,8.420999526977539 -16,4.000999927520752 C-16,4.000999927520752 -16,-3.999000072479248 -16,-3.999000072479248 C-16,-8.418999671936035 -12.420000076293945,-11.99899959564209 -8,-11.99899959564209 C-8,-11.99899959564209 -4,-11.99899959564209 -4,-11.99899959564209 C-4,-11.99899959564209 12.75,-25.39900016784668 12.75,-25.39900016784668 C13.609999656677246,-26.089000701904297 14.869999885559082,-25.948999404907227 15.5600004196167,-25.089000701904297z"></path></g></g><g style="display: none;" transform="matrix(1.0056756734848022,0,0,1.0056756734848022,56.0084342956543,44.0004997253418)" opacity="0.03304187001999623"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M-4,-13.859000205993652 C0.7799999713897705,-11.08899974822998 4,-5.919000148773193 4,0.0010000000474974513 C4,5.921000003814697 0.7799999713897705,11.090999603271484 -4,13.861000061035156 C-4,13.861000061035156 -4,-13.859000205993652 -4,-13.859000205993652z"></path></g></g><g style="display: none;" transform="matrix(1.012651801109314,0,0,1.012651801109314,64.37825012207031,44.0057487487793)" opacity="0.013781692947698473"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M-6.236000061035156,-28.895999908447266 C4.803999900817871,-23.615999221801758 11.984000205993652,-12.456000328063965 11.984000205993652,-0.006000000052154064 C11.984000205993652,12.454000473022461 4.794000148773193,23.624000549316406 -6.265999794006348,28.893999099731445 C-8.255999565124512,29.8439998626709 -10.645999908447266,29.003999710083008 -11.595999717712402,27.003999710083008 C-12.545999526977539,25.013999938964844 -11.696000099182129,22.624000549316406 -9.706000328063965,21.673999786376953 C-1.406000018119812,17.724000930786133 3.9839999675750732,9.343999862670898 3.9839999675750732,-0.006000000052154064 C3.9839999675750732,-9.345999717712402 -1.3960000276565552,-17.715999603271484 -9.675999641418457,-21.676000595092773 C-11.675999641418457,-22.625999450683594 -12.515999794006348,-25.016000747680664 -11.565999984741211,-27.006000518798828 C-10.616000175476074,-29.006000518798828 -8.22599983215332,-29.84600067138672 -6.236000061035156,-28.895999908447266z"></path></g></g><g style="display: none;" transform="matrix(1.0002110004425049,0,0,1.0002110004425049,56.00299835205078,44)" opacity="1"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M-4,-13.859000205993652 C0.7799999713897705,-11.08899974822998 4,-5.919000148773193 4,0.0010000000474974513 C4,5.921000003814697 0.7799999713897705,11.090999603271484 -4,13.861000061035156 C-4,13.861000061035156 -4,-13.859000205993652 -4,-13.859000205993652z"></path></g></g><g style="display: none;" transform="matrix(1.000206708908081,0,0,1.000206708908081,64.00399780273438,44.00699996948242)" opacity="1"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M-6.236000061035156,-28.895999908447266 C4.803999900817871,-23.615999221801758 11.984000205993652,-12.456000328063965 11.984000205993652,-0.006000000052154064 C11.984000205993652,12.454000473022461 4.794000148773193,23.624000549316406 -6.265999794006348,28.893999099731445 C-8.255999565124512,29.8439998626709 -10.645999908447266,29.003999710083008 -11.595999717712402,27.003999710083008 C-12.545999526977539,25.013999938964844 -11.696000099182129,22.624000549316406 -9.706000328063965,21.673999786376953 C-1.406000018119812,17.724000930786133 3.9839999675750732,9.343999862670898 3.9839999675750732,-0.006000000052154064 C3.9839999675750732,-9.345999717712402 -1.3960000276565552,-17.715999603271484 -9.675999641418457,-21.676000595092773 C-11.675999641418457,-22.625999450683594 -12.515999794006348,-25.016000747680664 -11.565999984741211,-27.006000518798828 C-10.616000175476074,-29.006000518798828 -8.22599983215332,-29.84600067138672 -6.236000061035156,-28.895999908447266z"></path></g></g><g transform="matrix(1,0,0,1,56,44)" opacity="1" style="display: block;"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M-4,-13.859000205993652 C0.7799999713897705,-11.08899974822998 4,-5.919000148773193 4,0.0010000000474974513 C4,5.921000003814697 0.7799999713897705,11.090999603271484 -4,13.861000061035156 C-4,13.861000061035156 -4,-13.859000205993652 -4,-13.859000205993652z"></path></g></g><g transform="matrix(1,0,0,1,64.01399993896484,44.00699996948242)" opacity="1" style="display: block;"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M-6.236000061035156,-28.895999908447266 C4.803999900817871,-23.615999221801758 11.984000205993652,-12.456000328063965 11.984000205993652,-0.006000000052154064 C11.984000205993652,12.454000473022461 4.794000148773193,23.624000549316406 -6.265999794006348,28.893999099731445 C-8.255999565124512,29.8439998626709 -10.645999908447266,29.003999710083008 -11.595999717712402,27.003999710083008 C-12.545999526977539,25.013999938964844 -11.696000099182129,22.624000549316406 -9.706000328063965,21.673999786376953 C-1.406000018119812,17.724000930786133 3.9839999675750732,9.343999862670898 3.9839999675750732,-0.006000000052154064 C3.9839999675750732,-9.345999717712402 -1.3960000276565552,-17.715999603271484 -9.675999641418457,-21.676000595092773 C-11.675999641418457,-22.625999450683594 -12.515999794006348,-25.016000747680664 -11.565999984741211,-27.006000518798828 C-10.616000175476074,-29.006000518798828 -8.22599983215332,-29.84600067138672 -6.236000061035156,-28.895999908447266z"></path></g></g></g></g></svg>
@@ -116,10 +116,10 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88" width="88" height="88" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; transform: translate3d(0px, 0px, 0px);"><defs><clipPath id="__lottie_element_745"><rect width="88" height="88" x="0" y="0"></rect></clipPath><filter id="__lottie_element_750" filterUnits="objectBoundingBox" x="0%" y="0%" width="100%" height="100%"><feComponentTransfer in="SourceGraphic"><feFuncA type="table" tableValues="1.0 0.0"></feFuncA></feComponentTransfer></filter><mask id="__lottie_element_749" mask-type="alpha"><g filter="url(#__lottie_element_750)"><rect width="88" height="88" x="0" y="0" fill="#ffffff" opacity="0"></rect><g transform="matrix(1,0,0,1,47.422000885009766,41.702999114990234)" opacity="1" style="display: block;"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M-33.94157409667969,-28.281574249267578 C-35.50258255004883,-29.84258270263672 -35.50258255004883,-32.377418518066406 -33.94157409667969,-33.93842697143555 C-33.94157409667969,-33.93842697143555 -33.93842697143555,-33.94157409667969 -33.93842697143555,-33.94157409667969 C-32.377418518066406,-35.50258255004883 -29.84258270263672,-35.50258255004883 -28.281574249267578,-33.94157409667969 C-28.281574249267578,-33.94157409667969 33.94157409667969,28.281574249267578 33.94157409667969,28.281574249267578 C35.50258255004883,29.84258270263672 35.50258255004883,32.377418518066406 33.94157409667969,33.93842697143555 C33.94157409667969,33.93842697143555 33.93842697143555,33.94157409667969 33.93842697143555,33.94157409667969 C32.377418518066406,35.50258255004883 29.84258270263672,35.50258255004883 28.281574249267578,33.94157409667969 C28.281574249267578,33.94157409667969 -33.94157409667969,-28.281574249267578 -33.94157409667969,-28.281574249267578z"></path></g></g></g></mask></defs><g clip-path="url(#__lottie_element_745)"><g mask="url(#__lottie_element_749)" style="display: block;"><g transform="matrix(1,0,0,1,44,44)" opacity="1"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M-0.4399999976158142,-25.09600067138672 C-0.15000000596046448,-24.736000061035156 0,-24.29599952697754 0,-23.84600067138672 C0,-23.84600067138672 0,23.833999633789062 0,23.833999633789062 C0,24.93400001525879 -0.8999999761581421,25.833999633789062 -2,25.833999633789062 C-2.450000047683716,25.833999633789062 -2.890000104904175,25.673999786376953 -3.25,25.393999099731445 C-3.25,25.393999099731445 -20,11.994000434875488 -20,11.994000434875488 C-20,11.994000434875488 -24,11.994000434875488 -24,11.994000434875488 C-28.420000076293945,11.994000434875488 -32,8.413999557495117 -32,3.99399995803833 C-32,3.99399995803833 -32,-4.00600004196167 -32,-4.00600004196167 C-32,-8.425999641418457 -28.420000076293945,-12.005999565124512 -24,-12.005999565124512 C-24,-12.005999565124512 -20,-12.005999565124512 -20,-12.005999565124512 C-20,-12.005999565124512 -3.25,-25.4060001373291 -3.25,-25.4060001373291 C-2.390000104904175,-26.09600067138672 -1.1299999952316284,-25.95599937438965 -0.4399999976158142,-25.09600067138672z M13.777999877929688,-28.895999908447266 C24.81800079345703,-23.615999221801758 31.99799919128418,-12.456000328063965 31.99799919128418,-0.006000000052154064 C31.99799919128418,12.454000473022461 24.808000564575195,23.624000549316406 13.748000144958496,28.893999099731445 C11.758000373840332,29.8439998626709 9.368000030517578,29.003999710083008 8.418000221252441,27.003999710083008 C7.4679999351501465,25.013999938964844 8.317999839782715,22.624000549316406 10.307999610900879,21.673999786376953 C18.607999801635742,17.724000930786133 23.99799919128418,9.343999862670898 23.99799919128418,-0.006000000052154064 C23.99799919128418,-9.345999717712402 18.618000030517578,-17.715999603271484 10.338000297546387,-21.676000595092773 C8.338000297546387,-22.625999450683594 7.498000144958496,-25.016000747680664 8.447999954223633,-27.006000518798828 C9.39799976348877,-29.006000518798828 11.788000106811523,-29.84600067138672 13.777999877929688,-28.895999908447266z M8,-13.866000175476074 C12.779999732971191,-11.095999717712402 16,-5.926000118255615 16,-0.006000000052154064 C16,5.914000034332275 12.779999732971191,11.083999633789062 8,13.854000091552734 C8,13.854000091552734 8,-13.866000175476074 8,-13.866000175476074z"></path></g></g></g><g transform="matrix(1,0,0,1,41.172000885009766,46.827999114990234)" opacity="1" style="display: block;"><g opacity="1" transform="matrix(1,0,0,1,0,0)"><path fill="rgb(255,255,255)" fill-opacity="1" d=" M-33.94157409667969,-28.281574249267578 C-35.50258255004883,-29.84258270263672 -35.50258255004883,-32.377418518066406 -33.94157409667969,-33.93842697143555 C-33.94157409667969,-33.93842697143555 -33.93842697143555,-33.94157409667969 -33.93842697143555,-33.94157409667969 C-32.377418518066406,-35.50258255004883 -29.84258270263672,-35.50258255004883 -28.281574249267578,-33.94157409667969 C-28.281574249267578,-33.94157409667969 33.94157409667969,28.281574249267578 33.94157409667969,28.281574249267578 C35.50258255004883,29.84258270263672 35.50258255004883,32.377418518066406 33.94157409667969,33.93842697143555 C33.94157409667969,33.93842697143555 33.93842697143555,33.94157409667969 33.93842697143555,33.94157409667969 C32.377418518066406,35.50258255004883 29.84258270263672,35.50258255004883 28.281574249267578,33.94157409667969 C28.281574249267578,33.94157409667969 -33.94157409667969,-28.281574249267578 -33.94157409667969,-28.281574249267578z"></path></g></g></g></svg>
                   </span>
                 </div>
-                <div class="bg-quality-menu-wrap rounded-sm bottom-[41px] h-[100px] left-1/2 ml-[-16px] absolute w-8">
+                <div class="volume-box bg-quality-menu-wrap rounded-sm bottom-[41px] hidden h-[100px] left-1/2 ml-[-16px] absolute w-8">
                   <div class="text-[#e5e9ef] text-[12px] h-7 leading-7 mb-0.5 text-center w-full">{{Math.floor(volume * 100)}}</div>
                   <div class="h-[60px] my-0 mx-auto cursor-pointer items-center flex justify-start align-middle">
-                    <div @mousedown="handleZoomVolume" class="flex items-center justify-center h-full select-none align-middle w-full">
+                    <div ref="volumeArea" @mousedown="handleZoomVolume" class="flex items-center justify-center h-full select-none align-middle w-full">
                       <div class="items-end h-full w-0.5 flex relative">
                         <div class="bg-[#e7e7e7] rounded-[1.5px] inset-0 absolute overflow-hidden">
                           <div :style="{transform: `scaleY(${volume})`}" class="bg-theme-color inset-0 absolute origin-bottom-left"></div>
@@ -159,9 +159,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, defineProps, nextTick  } from 'vue'
+import { ref, onMounted, onBeforeUnmount, defineProps, nextTick, computed  } from 'vue'
 import { getVideoTime } from '@/utils/getVideoInfo.js'
 
+const volume = ref(1)
+if(!localStorage.getItem("controlSetting")) {
+  const setting = {
+    volume: 1
+  }
+  localStorage.setItem("controlSetting", JSON.stringify(setting))
+}else {
+  const setting = JSON.parse(localStorage.getItem("controlSetting"))
+  volume.value = setting.volume
+}
 
 const props = defineProps({
   options: {
@@ -196,14 +206,18 @@ const handleTimeSeekBlur = (event) => {
 
 const timer = ref(null)
 const timer2 = ref(null)
+const timer4 = ref(null)
 const handleControlHover = (type, event) => {
   const { target } = event
   if(type == 1) {
     clearTimeout(timer.value)
     timer.value = timerControl('add', target)
-  }else {
+  }else if(type == 2) {
     clearTimeout(timer2.value)
     timer2.value = timerControl('add', target)
+  }else if(type == 4) {
+    clearTimeout(timer4.value)
+    timer4.value = timerControl('add', target)
   }
 }
 
@@ -213,6 +227,8 @@ const handleControlLeave = (type, event) => {
     timer.value = timerControl('remove', target)
   }else if(type == 2) {
     timer2.value = timerControl('remove', target)
+  }else if(type == 4) {
+    timer4.value = timerControl('remove', target)
   }
 }
 
@@ -249,37 +265,76 @@ const handleTimeUpdate = () => {
   currentTime.value = video.value.currentTime
 }
 
+const progressArea = ref()
 const handleProgressDown = (event) => {
-  let rect = event.currentTarget.getBoundingClientRect()
-  let offsetX = event.clientX - rect.left
-  video.value.currentTime = offsetX / event.currentTarget.clientWidth * props.options.duration
+  event.preventDefault()
+  window.addEventListener("mousemove", progressMove)
+  window.addEventListener("mouseup", progressUp)
+  const rect = progressArea.value.getBoundingClientRect()
+  const offsetX = event.clientX - rect.left
+  currentTime.value = offsetX / progressArea.value.clientWidth * props.options.duration
+}
+
+const progressMove = (event) => {
+  const rect = progressArea.value.getBoundingClientRect()
+  const offsetX = event.clientX - rect.left
+  const progressRate = offsetX / progressArea.value.clientWidth
+  if(progressRate < 0) {
+    currentTime.value = 0
+  }else if(progressRate > 1) {
+    currentTime.value = props.options.duration
+  }else {
+    currentTime.value = progressRate * props.options.duration
+  }
+}
+
+const progressUp = (event) => {
+  video.value.currentTime = currentTime.value
   isPaused.value = true
   video.value.play()
+  window.removeEventListener("mousemove", progressMove)
+  window.removeEventListener("mouseup", progressUp)
 }
 
-const isMuted = ref(false)
+const isMuted = computed(() => {
+  return volume.value == 0
+})
+const volumeArea = ref()
 const switchMuted = () => {
-  isMuted.value = !isMuted.value
   video.value.muted = !video.value.muted
+  if(video.value.muted) {
+    volume.value = 0
+  }else {
+    const setting = JSON.parse(localStorage.getItem("controlSetting"))
+    volume.value = setting.volume
+  }
 }
-
-const volume = ref(1)
 const handleZoomVolume = (event) => {
   event.preventDefault()
   window.addEventListener("mousemove", volumeMouseMove)
   window.addEventListener("mouseup", volumeMouseUp)
-  const rect = event.currentTarget.getBoundingClientRect()
+  const rect = volumeArea.value.getBoundingClientRect()
   const offsetY = rect.bottom - event.clientY
-  const calVolume = Math.floor(offsetY / event.currentTarget.clientHeight * 100) / 100
+  const calVolume = Math.floor(offsetY / volumeArea.value.clientHeight * 100) / 100
   volume.value = calVolume
   video.volume = calVolume
 }
-
 const volumeMouseMove = (event) => {
-  console.log(event);
+  const rect = volumeArea.value.getBoundingClientRect()
+  const offsetY = rect.bottom - event.clientY
+  let calVolume = Math.floor(offsetY / volumeArea.value.clientHeight * 100) / 100
+  if(calVolume > 1) {
+    calVolume = 1
+  }else if(calVolume < 0) {
+    calVolume = 0
+  }
+  volume.value = calVolume
+  video.volume = calVolume
 }
-
 const volumeMouseUp = (event) => {
+  const setting = JSON.parse(localStorage.getItem("controlSetting"))
+  setting.volume = volume.value
+  localStorage.setItem("controlSetting", JSON.stringify(setting))
   window.removeEventListener("mousemove", volumeMouseMove)
   window.removeEventListener("mouseup", volumeMouseUp)
 }
@@ -440,5 +495,7 @@ const danmus = ref([
 .state-show .playbackrate-menu {
   display: block;
 }
-
+.state-show .volume-box {
+  display: block;
+}
 </style>
