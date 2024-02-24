@@ -3,7 +3,7 @@
     <div class="video-area relative flex-1 overflow-hidden bg-black">
       <div class="video-perch cursor-none flex w-full h-full justify-center relative">
         <div class="block w-full h-full box-border">
-          <video @timeupdate="handleTimeUpdate" @ended="isPaused = false" ref="video" crossorigin="anonymous" preload="auto" class="block w-full h-full m-auto" :src="props.options.url"></video>
+          <video @timeupdate="handleTimeUpdate" @ended="isPaused = false" ref="video" autoplay crossorigin="anonymous" preload="auto" class="block w-full h-full m-auto" :src="props.options.url"></video>
         </div>
       </div>
       <div class="video-poster"></div>
@@ -166,16 +166,23 @@
 import { ref, onMounted, onBeforeUnmount, defineProps, nextTick, computed  } from 'vue'
 import { getVideoTime } from '@/utils/getVideoInfo.js'
 
+
 const volume = ref(1)
-if(!localStorage.getItem("controlSetting")) {
-  const setting = {
-    volume: 1
+const video = ref()
+
+onMounted(() => {
+  if(!localStorage.getItem("controlSetting")) {
+    const setting = {
+      volume: 1
+    }
+    localStorage.setItem("controlSetting", JSON.stringify(setting))
+  }else {
+    const setting = JSON.parse(localStorage.getItem("controlSetting"))
+    volume.value = setting.volume
+    video.value.volume = setting.volume
   }
-  localStorage.setItem("controlSetting", JSON.stringify(setting))
-}else {
-  const setting = JSON.parse(localStorage.getItem("controlSetting"))
-  volume.value = setting.volume
-}
+
+})
 
 const props = defineProps({
   options: {
@@ -251,8 +258,7 @@ const handleSwitchQuality = (event) => {
 }
 
 
-const video = ref()
-const isPaused = ref(false)
+const isPaused = ref(true)
 
 const handlePlaypause = () => {
   if(video.value.paused || video.value.ended) {
@@ -322,7 +328,7 @@ const handleZoomVolume = (event) => {
   const offsetY = rect.bottom - event.clientY
   const calVolume = Math.floor(offsetY / volumeArea.value.clientHeight * 100) / 100
   volume.value = calVolume
-  video.volume = calVolume
+  video.value.volume = calVolume
 }
 const volumeMouseMove = (event) => {
   const rect = volumeArea.value.getBoundingClientRect()
@@ -334,7 +340,7 @@ const volumeMouseMove = (event) => {
     calVolume = 0
   }
   volume.value = calVolume
-  video.volume = calVolume
+  video.value.volume = calVolume
 }
 const volumeMouseUp = (event) => {
   const setting = JSON.parse(localStorage.getItem("controlSetting"))
