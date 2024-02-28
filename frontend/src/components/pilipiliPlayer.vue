@@ -31,7 +31,7 @@
           <div class="px-3 absolute bottom-[44px] left-0 right-0 transition-opacity duration-200 ease-out">
             <div class="relative">
               <div class="pointer-events-none"></div>
-              <div ref="progressArea" @mousedown="handleProgressDown" class="items-end cursor-pointer flex h-2.5 pb-1.5">
+              <div ref="progressArea" @mouseenter="handleProgressMouseenter" @mouseleave="handleProgressMouseleave" @mousedown="handleProgressDown" class="items-end cursor-pointer flex h-2.5 pb-1.5">
                 <div class="h-1 items-center flex relative w-full">
                   <div class="w-full h-full absolute">
                     <div class="bg-control-time-seek rounded-[1.5px] overflow-hidden absolute inset-0">
@@ -47,11 +47,15 @@
                       </div>
                     </div>
                   </div>
-                  <div :style="{left: '65.5px'}" class="h-4 ml-[-4px] overflow-hidden pointer-events-none absolute transition-opacity duration-100 w-2">
+                  <div :style="{left: `${indicator}px`}" class="h-4 ml-[-4px] overflow-hidden pointer-events-none absolute transition-opacity duration-100 w-2">
                     <div class="border-solid h-0 relative w-0 border-transparent border-t-theme-color border-x-4 border-t-4"></div>
                     <div class="border-solid h-0 relative w-0 border-transparent border-b-theme-color border-x-4 border-b-4 mt-2"></div>
                   </div>
-                  <div></div>
+                  <div :style="{left: `${0}px`}" class="block bg-transparent rounded-sm bottom-[22px] leading-9 overflow-hidden pointer-events-none absolute w-40">
+                    <div class="h-[90px] relative w-40">
+                      <img :src="indicatorPreview" class="h-full my-0 mx-auto relative" />
+                    </div>
+                  </div>
                   <div></div>
                   <div></div>
                   <div></div>
@@ -182,7 +186,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, defineProps, nextTick, computed  } from 'vue'
-import { getVideoTime } from '@/utils/getVideoInfo.js'
+import { getVideoTime, captureFrame } from '@/utils/getVideoInfo.js'
 
 
 const volume = ref(1)
@@ -312,6 +316,21 @@ const progressUp = (event) => {
   window.removeEventListener("mousemove", progressMove)
   window.removeEventListener("mouseup", progressUp)
   progressPressDown.value = false
+}
+
+const indicator = ref(0)
+const indicatorPreview = ref('')
+const handleProgressMove = (event) => {
+  indicator.value = event.offsetX
+  // indicatorPreview.value = captureFrame(props.options.url, event.offsetX / event.target.clientWidth * props.options.duration)
+}
+
+const handleProgressMouseenter = (event) => {
+  progressArea.value.addEventListener('mousemove', handleProgressMove)
+}
+
+const handleProgressMouseleave = (event) => {
+  progressArea.value.removeEventListener('mousemove', handleProgressMove)
 }
 
 const timeSeekFlag = ref(false)

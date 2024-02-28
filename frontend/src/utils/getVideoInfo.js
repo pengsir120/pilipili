@@ -46,7 +46,7 @@ export function captureFrame(videoFile, time = 0) {
     // 自动播放存在兼容性问题，设置静音解决自动播放在不同浏览器的兼容性问题
     videoElement.muted = true; 
     videoElement.autoplay = true;
-    videoElement.src = URL.createObjectURL(videoFile);
+    videoElement.src = typeof videoFile == 'string' ? videoFile : URL.createObjectURL(videoFile);
     videoElement.oncanplay = async function () {
       const flame = await drawVideoToCanvas(videoElement);
       resolve(flame); 
