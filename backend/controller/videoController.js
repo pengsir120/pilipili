@@ -9,6 +9,10 @@ const { hotInc, topHots } = require('../model/redis/redishotsinc')
 // 观看 +1 点赞 +2 评论 +2 收藏 +3
 // const { getvodPlay } = require('../controller/vodController')
 const minioClient = require('../utils/minio')
+const fs = require('fs')
+const { resolve } = require('path')
+const { getVideoThumbPics } = require('../utils/ffmpeg')
+const bucketName = 'test'
 
 exports.getHots = async (req, res) => {
   const { topnum } = req.params
@@ -312,6 +316,15 @@ exports.createvideo = async (req, res) => {
   const body = req.body
   body.user = req.user._id
 
+  const tempDirPath = resolve(__dirname, '../temp')
+  const fileName = body.url.split('/')[body.url.split('/').length - 1]
+  await minioClient.fGetObject(bucketName, fileName, `${tempDirPath}/${fileName}`)
+  await getVideoThumbPics(fileName)
+  await minioClient.fPutObject(bucketName, `${fileName.split('.')[0]}.jpg`, `${tempDirPath}/${fileName.split('.')[0]}.jpg`)
+  await fs.unlinkSync(`${tempDirPath}/${fileName}`)
+  await fs.unlinkSync(`${tempDirPath}/${fileName.split('.')[0]}.jpg`)
+  body.thumbPreviewUrls = [`http://127.0.0.1:9000/${bucketName}/${fileName.split('.')[0]}.jpg`]
+
   const videoModel = new Video(body)
   try {
     const dbback = await videoModel.save()
@@ -336,7 +349,6 @@ exports.updatevideo = async (req, res) => {
 exports.upload = async (req, res) => {
   const { buffer, mimetype, originalname } = req.file; // 获取上传文件
   // const metaData = req.body.metaData
-  const bucketName = 'test'; //自己创建的桶名 
   // const objectName = Buffer.from(originalname, 'latin1').toString('utf-8') // 设置对象名称
   const objectName = `${Date.now()}.${mimetype.split('/')[1]}`
   // const data = await minioClient.putObject(bucketName, objectName, buffer, metaData ? JSON.parse(metaData) : undefined); // 上传到MinIO

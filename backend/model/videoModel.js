@@ -52,6 +52,10 @@ const videoSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  thumbPreviewUrls: {
+    type: Array,
+    required: true
+  },
   ...baseModel,
 })
 
