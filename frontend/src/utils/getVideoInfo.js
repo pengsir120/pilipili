@@ -73,3 +73,14 @@ function drawVideoToCanvas(video) {
     }, 'image/png');
   });
 }
+
+// 获取视频缩略图截图
+export function getVideoThumb(sourceImg, targetNum) {
+  const row = Math.floor(targetNum / 10)
+  const col = targetNum % 10
+  const c = document.createElement("canvas")
+  c.width = 160
+  c.height = 90
+  c.getContext('2d').drawImage(sourceImg, col * 320,  row * 180, 320, 180, 0, 0, 160, 90)
+  return c.toDataURL('image/jpeg')
+}

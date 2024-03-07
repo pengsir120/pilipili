@@ -47,13 +47,16 @@
                       </div>
                     </div>
                   </div>
-                  <div :style="{left: `${indicator}px`}" class="h-4 ml-[-4px] overflow-hidden pointer-events-none absolute transition-opacity duration-100 w-2">
+                  <div :style="{left: `${indicator}px`}" class="progress-move-indicator h-4 ml-[-4px] opacity-0 overflow-hidden pointer-events-none absolute transition-opacity duration-100 invisible w-2">
                     <div class="border-solid h-0 relative w-0 border-transparent border-t-theme-color border-x-4 border-t-4"></div>
                     <div class="border-solid h-0 relative w-0 border-transparent border-b-theme-color border-x-4 border-b-4 mt-2"></div>
                   </div>
-                  <div :style="{left: `${0}px`}" class="block bg-transparent rounded-sm bottom-[22px] leading-9 overflow-hidden pointer-events-none absolute w-40">
+                  <div :style="{left: `${popupOffsetX}px`}" class="progress-popup hidden bg-transparent rounded-sm bottom-[22px] leading-9 overflow-hidden pointer-events-none absolute w-40">
                     <div class="h-[90px] relative w-40">
                       <img :src="indicatorPreview" class="h-full my-0 mx-auto relative" />
+                      <div class="bg-quality-menu-wrap rounded-sm bottom-0 text-white inline-block text-[12px] h-[18px] leading-[18px] left-1/2 py-0 px-[5px] absolute translate-x-[-50%] align-bottom">
+                        {{previewTime}}
+                      </div>
                     </div>
                   </div>
                   <div></div>
@@ -186,7 +189,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, defineProps, nextTick, computed  } from 'vue'
-import { getVideoTime, captureFrame } from '@/utils/getVideoInfo.js'
+import { getVideoTime, getVideoThumb } from '@/utils/getVideoInfo.js'
 
 
 const volume = ref(1)
@@ -320,17 +323,33 @@ const progressUp = (event) => {
 
 const indicator = ref(0)
 const indicatorPreview = ref('')
+const popupOffsetX = ref(0)
+const previewTime = ref('')
+const sourceImg = new Image()
+sourceImg.src = props.options.thumbPreviewUrls[0] || ''
+sourceImg.setAttribute("crossOrigin", "Anonymous")
 const handleProgressMove = (event) => {
-  indicator.value = event.offsetX
-  // indicatorPreview.value = captureFrame(props.options.url, event.offsetX / event.target.clientWidth * props.options.duration)
+  const rect = progressArea.value.getBoundingClientRect()
+  indicator.value = event.clientX - rect.left
+  if(indicator.value - 80 < 0) {
+    popupOffsetX.value = 0
+  }else if(indicator.value - 80 > rect.width - 160) {
+    popupOffsetX.value = rect.width - 160
+  }else {
+    popupOffsetX.value = indicator.value - 80
+  }
+  previewTime.value = getVideoTime((event.clientX - rect.left)  / rect.width * props.options.duration)
+  indicatorPreview.value = getVideoThumb(sourceImg, Math.floor((event.clientX - rect.left)  / rect.width * props.options.duration * 24 / 100))
 }
 
 const handleProgressMouseenter = (event) => {
   progressArea.value.addEventListener('mousemove', handleProgressMove)
+  progressArea.value.classList.add('state-active')
 }
 
 const handleProgressMouseleave = (event) => {
   progressArea.value.removeEventListener('mousemove', handleProgressMove)
+  progressArea.value.classList.remove('state-active')
 }
 
 const timeSeekFlag = ref(false)
@@ -569,6 +588,16 @@ const danmus = ref([
 .state-show .volume-box {
   display: block;
 }
+
+.state-active .progress-move-indicator {
+  opacity: 1;
+  visibility: visible;
+}
+
+.state-active .progress-popup {
+  display: block;
+}
+
 video::-webkit-media-controls,
 video::-moz-media-controls,
 video::-webkit-media-controls-enclosure{
