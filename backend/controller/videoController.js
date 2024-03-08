@@ -5,7 +5,7 @@ const {
   Subscribe,
   CollectModel,
 } = require("../model")
-const { hotInc, topHots } = require('../model/redis/redishotsinc')
+// const { hotInc, topHots } = require('../model/redis/redishotsinc')
 // 观看 +1 点赞 +2 评论 +2 收藏 +3
 // const { getvodPlay } = require('../controller/vodController')
 const minioClient = require('../utils/minio')
@@ -15,9 +15,10 @@ const { getVideoThumbPics } = require('../utils/ffmpeg')
 const bucketName = 'test'
 
 exports.getHots = async (req, res) => {
-  const { topnum } = req.params
-  const tops = await topHots(topnum)
-  res.status(200).json({tops})
+  // const { topnum } = req.params
+  // const tops = await topHots(topnum)
+  // res.status(200).json({tops})
+  res.status(200).json({})
 }
 
 exports.collect = async (req, res) => {
@@ -43,9 +44,9 @@ exports.collect = async (req, res) => {
     video: videoId
   }).save()
 
-  if(mycollect) {
-    await hotInc(videoId, 3)
-  }
+  // if(mycollect) {
+  //   await hotInc(videoId, 3)
+  // }
 
   res.status(201).json({
     mycollect
@@ -137,14 +138,14 @@ exports.likevideo = async (req, res) => {
   } else if (doc && doc.like === -1) {
     doc.like = 1
     await doc.save()
-    await hotInc(videoId, 2)
+    // await hotInc(videoId, 2)
   } else {
     await new Videolike({
       user: userId,
       video: videoId,
       like: 1
     }).save()
-    await hotInc(videoId, 2)
+    // await hotInc(videoId, 2)
   }
   video.likeCount = await Videolike.countDocuments({
     video: videoId,
@@ -230,7 +231,7 @@ exports.comment = async (req, res) => {
     video: videoId,
     user: req.user._id
   }).save()
-  await hotInc(videoId, 2)
+  // await hotInc(videoId, 2)
   videoInfo.commentCount++
   await videoInfo.save()
   res.status(201).json(comment)
@@ -308,7 +309,7 @@ exports.video = async (req, res) => {
       videoInfo.isSubscribe = true
     }
   }
-  await hotInc(videoId, 1)
+  // await hotInc(videoId, 1)
   res.status(200).json(videoInfo)
 }
 
