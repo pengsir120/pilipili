@@ -11,7 +11,7 @@ const {
 const minioClient = require('../utils/minio')
 const fs = require('fs')
 const { resolve } = require('path')
-const { getVideoThumbPics } = require('../utils/ffmpeg')
+const { getVideoThumbPics, getVideoMetaData } = require('../utils/ffmpeg')
 const bucketName = 'test'
 
 exports.getHots = async (req, res) => {
@@ -321,10 +321,14 @@ exports.createvideo = async (req, res) => {
   const fileName = body.url.split('/')[body.url.split('/').length - 1]
   await minioClient.fGetObject(bucketName, fileName, `${tempDirPath}/${fileName}`)
   await getVideoThumbPics(fileName)
+  const metaData = await getVideoMetaData(fileName)
+  const { avg_frame_rate } = metaData.streams[0]
+  const fpsArr = avg_frame_rate.split("/")
   await minioClient.fPutObject(bucketName, `${fileName.split('.')[0]}.jpg`, `${tempDirPath}/${fileName.split('.')[0]}.jpg`)
   await fs.unlinkSync(`${tempDirPath}/${fileName}`)
   await fs.unlinkSync(`${tempDirPath}/${fileName.split('.')[0]}.jpg`)
   body.thumbPreviewUrls = [`http://127.0.0.1:9000/${bucketName}/${fileName.split('.')[0]}.jpg`]
+  body.avg_frame_rate = Number(fpsArr[0]) / Number(fpsArr[1])
 
   const videoModel = new Video(body)
   try {

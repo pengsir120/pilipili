@@ -292,14 +292,14 @@ const handleProgressDown = (event) => {
   window.addEventListener("mouseup", progressUp)
   const rect = progressArea.value.getBoundingClientRect()
   const offsetX = event.clientX - rect.left
-  currentTime.value = offsetX / progressArea.value.clientWidth * props.options.duration
+  currentTime.value = offsetX / rect.width * props.options.duration
   thumbOffsetX.value = currentTime.value / props.options.duration * (rect.width - 20)
 }
 
 const progressMove = (event) => {
   const rect = progressArea.value.getBoundingClientRect()
   const offsetX = event.clientX - rect.left
-  const progressRate = offsetX / progressArea.value.clientWidth
+  const progressRate = offsetX / rect.width
   if(progressRate < 0) {
     currentTime.value = 0
     thumbOffsetX.value = 0
@@ -330,6 +330,7 @@ sourceImg.src = props.options.thumbPreviewUrls[0] || ''
 sourceImg.setAttribute("crossOrigin", "Anonymous")
 const handleProgressMove = (event) => {
   const rect = progressArea.value.getBoundingClientRect()
+  const { duration, avg_frame_rate } = props.options
   indicator.value = event.clientX - rect.left
   if(indicator.value - 80 < 0) {
     popupOffsetX.value = 0
@@ -338,8 +339,8 @@ const handleProgressMove = (event) => {
   }else {
     popupOffsetX.value = indicator.value - 80
   }
-  previewTime.value = getVideoTime((event.clientX - rect.left)  / rect.width * props.options.duration)
-  indicatorPreview.value = getVideoThumb(sourceImg, Math.floor((event.clientX - rect.left)  / rect.width * props.options.duration * 24 / 100))
+  previewTime.value = getVideoTime((event.clientX - rect.left)  / rect.width * duration)
+  indicatorPreview.value = getVideoThumb(sourceImg, Math.floor((event.clientX - rect.left)  / rect.width * duration * avg_frame_rate / 100))
 }
 
 const handleProgressMouseenter = (event) => {

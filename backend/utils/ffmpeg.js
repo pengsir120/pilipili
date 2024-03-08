@@ -18,3 +18,16 @@ module.exports.getVideoThumbPics = async (filename) => {
     .run()
   })
 }
+
+module.exports.getVideoMetaData = async (filename) => {
+  return new Promise((resolve, reject) => {
+    const tempDirPath = path.resolve(__dirname, '../temp')
+    ffmpeg.ffprobe(`${tempDirPath}/${filename}`, (err, metadata) => {
+      if(err) {
+        reject(new Error(err))
+      }else {
+        resolve(metadata)
+      }
+    })
+  })
+}
