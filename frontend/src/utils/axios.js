@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const service = axios.create({
   baseURL: `${import.meta.env.VITE_APP_API_BASE}/api/v1`, // 域名配置
-  timeout: 50000
+  timeout: 200000
 })
 
 // request拦截器

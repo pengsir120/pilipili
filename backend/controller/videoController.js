@@ -320,14 +320,12 @@ exports.createvideo = async (req, res) => {
   const tempDirPath = resolve(__dirname, '../temp')
   const fileName = body.url.split('/')[body.url.split('/').length - 1]
   await minioClient.fGetObject(bucketName, fileName, `${tempDirPath}/${fileName}`)
-  await getVideoThumbPics(fileName)
+  const thumbPreviewUrls = await getVideoThumbPics(fileName, 4)
   const metaData = await getVideoMetaData(fileName)
   const { avg_frame_rate } = metaData.streams[0]
   const fpsArr = avg_frame_rate.split("/")
-  await minioClient.fPutObject(bucketName, `${fileName.split('.')[0]}.jpg`, `${tempDirPath}/${fileName.split('.')[0]}.jpg`)
   await fs.unlinkSync(`${tempDirPath}/${fileName}`)
-  await fs.unlinkSync(`${tempDirPath}/${fileName.split('.')[0]}.jpg`)
-  body.thumbPreviewUrls = [`http://127.0.0.1:9000/${bucketName}/${fileName.split('.')[0]}.jpg`]
+  body.thumbPreviewUrls = thumbPreviewUrls
   body.avg_frame_rate = Number(fpsArr[0]) / Number(fpsArr[1])
 
   const videoModel = new Video(body)
