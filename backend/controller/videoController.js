@@ -359,4 +359,24 @@ exports.upload = async (req, res) => {
   res.status(200).json({
     url: `http://127.0.0.1:9000/${bucketName}/${objectName}`
   })
+
+  const tempDirPath = resolve(__dirname, '../temp')
+  // const fileName = body.url.split('/')[body.url.split('/').length - 1]
+  // await minioClient.fGetObject(bucketName, fileName, `${tempDirPath}/${fileName}`)
+  // const thumbPreviewUrls = await getVideoThumbPics(fileName, 4)
+  // const metaData = await getVideoMetaData(fileName)
+  // const { avg_frame_rate } = metaData.streams[0]
+  // const fpsArr = avg_frame_rate.split("/")
+  // await fs.unlinkSync(`${tempDirPath}/${fileName}`)
+  // body.thumbPreviewUrls = thumbPreviewUrls
+  // body.avg_frame_rate = Number(fpsArr[0]) / Number(fpsArr[1])
+
+  if(mimetype.startsWith('video')) {
+    minioClient.fGetObject(bucketName, objectName, `${tempDirPath}/${objectName}`, async (err, file) => {
+      if (err) {
+        return console.log(err)
+      }
+      const thumbPreviewUrls = await getVideoThumbPics(objectName, 4)
+    })
+  }
 }
