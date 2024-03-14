@@ -1,8 +1,8 @@
 <template>
-  <div @mouseenter="videoAreaEnter" @mouseleave="videoAreaLeave" class="shadow-[0_0_8px_0_#F1F2F3] h-full relative w-full">
+  <div ref="container" @mouseenter="containerEnter" @mouseleave="containerLeave" :data-ctrl-hidden="ctrlHidden" class="shadow-[0_0_8px_0_#F1F2F3] h-full relative w-full">
     <div class="w-full h-full flex flex-col flex-nowrap">
-      <div class="video-area relative flex-1 overflow-hidden bg-black">
-        <div class="video-perch cursor-none flex w-full h-full justify-center relative">
+      <div @mousemove="videoAreaMove1(); videoAreaMove2()" @mouseleave="videoAreaLeave" class="video-area relative flex-1 overflow-hidden bg-black">
+        <div @click="handlePlaypause" @dbclick="handleFullscreen" class="video-perch flex w-full h-full justify-center relative">
           <div class="block w-full h-full box-border">
             <video
               @timeupdate="handleTimeUpdate"
@@ -27,8 +27,9 @@
         <div class="totast-wrap"></div>
         <div class="control-wrap absolute left-0 bottom-0 w-full z-[75]">
           <div></div>
-          <div>
+          <div :data-shadow-show="ctrlHidden">
             <!-- 进度条 -->
+            <!--  :class="[ctrlHidden ? 'opacity-0 invisible' : 'opacity-100 visible']" -->
             <div class="px-3 absolute bottom-[44px] left-0 right-0 transition-opacity duration-200 ease-out">
               <div class="relative">
                 <div class="pointer-events-none"></div>
@@ -68,6 +69,7 @@
               </div>
             </div>
             <!-- 控制栏 -->
+             <!-- :class="[ctrlHidden ? 'opacity-0' : 'opacity-100']" -->
             <div class="flex w-full h-[35px] justify-between leading-[22px] mt-5 px-3 transition-all duration-200 ease-out">
               <div class="inline-flex flex-none">
                 <div @click="handlePlaypause" class="fill-white text-control-color text-[0px] h-[22px] leading-[22px] outline-0 relative text-center w-9 z-[2] hover:text-white">
@@ -193,7 +195,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, defineProps, nextTick, computed  } from 'vue'
 import { getVideoTime, getVideoThumb } from '@/utils/getVideoInfo.js'
-
+import _ from "lodash"
 
 const volume = ref(1)
 const video = ref()
@@ -433,12 +435,28 @@ const handleFullscreen = () => {
   }
 }
 
-const videoAreaEnter = () => {
+const containerEnter = () => {
 
 }
 
-const videoAreaLeave = () => {
+const containerLeave = () => {
 
+}
+
+const container = ref()
+const ctrlHidden = ref(true)
+const videoAreaMove1 = (event) => {
+  container.value.classList.remove('state-no-cursor')
+  ctrlHidden.value = false
+}
+const videoAreaMove2 = _.debounce(() => {
+  container.value.classList.add('state-no-cursor')
+  ctrlHidden.value = true
+}, 1000)
+
+const videoAreaLeave = (event) => {
+  container.value.classList.add('state-no-cursor')
+  ctrlHidden.value = true
 }
 
 const danmus = ref([
@@ -608,6 +626,10 @@ const danmus = ref([
 
 .state-active .progress-popup {
   display: block;
+}
+
+.state-no-cursor .video-perch {
+  cursor: none;
 }
 
 video::-webkit-media-controls,
