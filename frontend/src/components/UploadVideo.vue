@@ -49,7 +49,7 @@
 <script setup>
 import { ref } from "vue"
 import { PlusOutlined } from '@ant-design/icons-vue';
-import { getVideoTime, captureFrame } from '@/utils/getVideoInfo'
+import { getVideoHash, captureFrame } from '@/utils/getVideoInfo'
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 
 const { $bus, $request } = userGetGlobalProperties()
@@ -113,7 +113,9 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
     // 视频封面
     if(picFileList.value.length == 0) {
       const coverInfo = await captureFrame(file, Math.random() * video.duration)
+      const picMd5 = await getVideoHash(coverInfo.file)
       const picFormData = new FormData()
+      picFormData.append("fileHash", picMd5)
       picFormData.append('file', coverInfo.file)
       const picRes = await $request({
         url: "/video/upload",
@@ -134,8 +136,10 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
       previewImage.value = picResUrl || coverInfo.url
     }
 
+    const md5 = await getVideoHash(file)
     const videoFormData = new FormData()
     videoFormData.append("file", file)
+    videoFormData.append("fileHash", md5)
     const res = await $request({
       url: "/video/upload",
       method: "post",

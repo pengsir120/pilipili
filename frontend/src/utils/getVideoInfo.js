@@ -1,3 +1,5 @@
+import SparkMD5 from 'spark-md5'
+
 // 将视频时长(秒)转化为时分秒的形式
 export function getVideoTime(seconds) {
   let secondTime = parseInt(seconds) // 秒
@@ -83,4 +85,20 @@ export function getVideoThumb(sourceImg, targetNum) {
   c.height = 90
   c.getContext('2d').drawImage(sourceImg, col * 320,  row * 180, 320, 180, 0, 0, 160, 90)
   return c.toDataURL('image/jpeg')
+}
+
+// 获取视频哈希值
+export function getVideoHash(videoFile) {
+  const reader = new FileReader()
+  reader.readAsArrayBuffer(videoFile)
+  return new Promise((resolve, reject) => {
+    reader.onload = (e) => {
+      const spark = new SparkMD5.ArrayBuffer()
+      spark.append(e.target.result)
+      resolve(spark.end())
+    }
+    reader.onerror = (err) => {
+      reject(err)
+    }
+  })
 }
