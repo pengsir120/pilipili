@@ -335,7 +335,7 @@ sourceImg.src = props.options.thumbPreviewUrls[0] || ''
 sourceImg.setAttribute("crossOrigin", "Anonymous")
 const handleProgressMove = (event) => {
   const rect = progressArea.value.getBoundingClientRect()
-  const { duration, avg_frame_rate } = props.options
+  const { duration } = props.options
   indicator.value = event.clientX - rect.left
   if(indicator.value - 80 < 0) {
     popupOffsetX.value = 0
@@ -345,7 +345,7 @@ const handleProgressMove = (event) => {
     popupOffsetX.value = indicator.value - 80
   }
   previewTime.value = getVideoTime((event.clientX - rect.left)  / rect.width * duration)
-  indicatorPreview.value = getVideoThumb(sourceImg, Math.floor((event.clientX - rect.left)  / rect.width * duration * avg_frame_rate / 100))
+  indicatorPreview.value = getVideoThumb(sourceImg, Math.floor((event.clientX - rect.left)  / rect.width * duration * 24 / 100))
 }
 
 const handleProgressMouseenter = (event) => {

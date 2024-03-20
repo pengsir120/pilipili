@@ -56,11 +56,6 @@ const videoSchema = new mongoose.Schema({
     type: Array,
     required: true
   },
-  avg_frame_rate: {
-    type: Number,
-    required: true,
-    default: 24,
-  },
   ...baseModel,
 })
 

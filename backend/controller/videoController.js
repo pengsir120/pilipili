@@ -250,7 +250,6 @@ exports.videolist = async (req, res) => {
       createAt: -1
     })
     .populate('user', '_id cover username')
-  console.log(videolist);
 
   const total = await Video.where(filter).countDocuments()
   res.status(200).json({
@@ -317,17 +316,6 @@ exports.createvideo = async (req, res) => {
   const body = req.body
   body.user = req.user._id
 
-  const tempDirPath = resolve(__dirname, '../temp')
-  const fileName = body.url.split('/')[body.url.split('/').length - 1]
-  await minioClient.fGetObject(bucketName, fileName, `${tempDirPath}/${fileName}`)
-  const thumbPreviewUrls = await getVideoThumbPics(fileName, 4)
-  const metaData = await getVideoMetaData(fileName)
-  const { avg_frame_rate } = metaData.streams[0]
-  const fpsArr = avg_frame_rate.split("/")
-  await fs.unlinkSync(`${tempDirPath}/${fileName}`)
-  body.thumbPreviewUrls = thumbPreviewUrls
-  body.avg_frame_rate = Number(fpsArr[0]) / Number(fpsArr[1])
-
   const videoModel = new Video(body)
   try {
     const dbback = await videoModel.save()
@@ -351,7 +339,8 @@ exports.updatevideo = async (req, res) => {
 
 exports.upload = async (req, res) => {
   const { buffer, mimetype, originalname } = req.file; // 获取上传文件
-  // const metaData = req.body.metaData
+  const { fileHash } = req.body
+  console.log(fileHash);
   // const objectName = Buffer.from(originalname, 'latin1').toString('utf-8') // 设置对象名称
   const objectName = `${Date.now()}.${mimetype.split('/')[1]}`
   // const data = await minioClient.putObject(bucketName, objectName, buffer, metaData ? JSON.parse(metaData) : undefined); // 上传到MinIO
@@ -359,24 +348,16 @@ exports.upload = async (req, res) => {
   res.status(200).json({
     url: `http://127.0.0.1:9000/${bucketName}/${objectName}`
   })
-
-  const tempDirPath = resolve(__dirname, '../temp')
-  // const fileName = body.url.split('/')[body.url.split('/').length - 1]
-  // await minioClient.fGetObject(bucketName, fileName, `${tempDirPath}/${fileName}`)
-  // const thumbPreviewUrls = await getVideoThumbPics(fileName, 4)
-  // const metaData = await getVideoMetaData(fileName)
-  // const { avg_frame_rate } = metaData.streams[0]
-  // const fpsArr = avg_frame_rate.split("/")
-  // await fs.unlinkSync(`${tempDirPath}/${fileName}`)
-  // body.thumbPreviewUrls = thumbPreviewUrls
-  // body.avg_frame_rate = Number(fpsArr[0]) / Number(fpsArr[1])
-
+  
   if(mimetype.startsWith('video')) {
-    minioClient.fGetObject(bucketName, objectName, `${tempDirPath}/${objectName}`, async (err, file) => {
+    const tempDirPath = resolve(__dirname, '../temp')
+    minioClient.fGetObject(bucketName, objectName, `${tempDirPath}/${objectName}`, (err, file) => {
       if (err) {
         return console.log(err)
       }
-      const thumbPreviewUrls = await getVideoThumbPics(objectName, 4)
+      getVideoThumbPics(objectName, 4).then(thumbPreviewUrls => {
+        fs.unlink(`${tempDirPath}/${objectName}`, () => {})
+      })
     })
   }
 }
