@@ -34,7 +34,7 @@
           :title="data.title"
           class="w-full h-11 3xl:h-12 pr-6 line-clamp-2 text-ellipsis cursor-pointer"
         >
-          {{ data.title }}
+          <a class="text-[#18191C] hover:text-theme-color transition-colors duration-200">{{ data.title }}</a>
         </h3>
         <div
           class="w-full h-fit mt-1 leading-4 3xl:leading-[19px] flex justify-start justify-items-center text-[13px] 3xl:text-[14px] text-regal-gray"
