@@ -56,6 +56,10 @@ const videoSchema = new mongoose.Schema({
     type: Array,
     required: true
   },
+  fileHash: {
+    type: String,
+    required: true
+  },
   ...baseModel,
 })
 
