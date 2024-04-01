@@ -148,6 +148,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
         'Content-Type': 'multipart/form-data'
       }
     })
+    form.value.fileHash = md5
     form.value.url = res.data.url
     onSuccess()
   }

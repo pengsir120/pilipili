@@ -276,6 +276,16 @@ exports.video = async (req, res) => {
     // const vodInfo = await getvodPlay(videoInfo.vodvideoId)
     // videoInfo.vod = vodInfo
     await Video.findByIdAndUpdate(videoId, { playCount: ++videoInfo.playCount }, { new: true })
+    const urlList = videoInfo.url.split("/")
+    const tagList = await minioClient.getObjectTagging(bucketName, urlList[urlList.length - 1])
+    if(tagList) {
+      try {
+        const thumbPreviewUrls = tagList[0].filter(item => item.Key.startsWith('thumbPreviewUrl')).map(item => item.Value)
+        await Video.findByIdAndUpdate(videoId, { thumbPreviewUrls }, { new: true })
+      } catch (error) {
+        
+      }
+    }
   }else {
     return res.status(501).json({
       err: '视频不存在'
@@ -342,7 +352,7 @@ exports.upload = async (req, res) => {
   const { fileHash } = req.body
   console.log(fileHash);
   // const objectName = Buffer.from(originalname, 'latin1').toString('utf-8') // 设置对象名称
-  const objectName = `${Date.now()}.${mimetype.split('/')[1]}`
+  const objectName = `${fileHash}.${mimetype.split('/')[1]}`
   // const data = await minioClient.putObject(bucketName, objectName, buffer, metaData ? JSON.parse(metaData) : undefined); // 上传到MinIO
   await minioClient.putObject(bucketName, objectName, buffer); // 上传到MinIO
   res.status(200).json({
@@ -356,6 +366,11 @@ exports.upload = async (req, res) => {
         return console.log(err)
       }
       getVideoThumbPics(objectName, 4).then(thumbPreviewUrls => {
+        const tags = {}
+        thumbPreviewUrls.forEach((url, index) => {
+          tags[`thumbPreviewUrl-${index}`] = url
+        })
+        minioClient.setObjectTagging(bucketName, objectName, tags)
         fs.unlink(`${tempDirPath}/${objectName}`, () => {})
       })
     })
