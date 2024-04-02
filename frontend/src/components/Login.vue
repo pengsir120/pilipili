@@ -51,7 +51,7 @@
           <div class="w-full h-0 border-b border-solid border-[#e3e5e7]"></div>
           <div class="w-full h-11 relative flex justify-start items-center py-3 px-5">
             <div>密码</div>
-            <input v-model="password" type="password" placeholder="请输入密码" class="ml-5 flex-1 outline-0">
+            <input v-model="password" @keyup.enter="handleLogin" type="password" placeholder="请输入密码" class="ml-5 flex-1 outline-0">
           </div>
         </form>
 
@@ -97,6 +97,7 @@
 import { ref } from "vue"
 import { useStore } from "vuex"
 import userGetGlobalProperties from '../utils/userGetGlobalProperties'
+import { message } from 'ant-design-vue'
 
 const vuexStore = useStore()
 const emit = defineEmits(['close'])
@@ -118,6 +119,8 @@ const handleLogin = () => {
       vuexStore.commit('SET_USER_INFO', res.data)
       vuexStore.commit('SET_AUTHORIZATION', res.data.token)
       emit('close')
+    }else {
+      message.error(res.response.data.errors[0].msg || res.response.data.errors)
     }
   })
 }
