@@ -156,8 +156,11 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
 
 const previewImage = ref('')
 const uploadPic = async ({file, onProgress, onSuccess}) => {
+  const picMd5 = await getVideoHash(file)
   const picFormData = new FormData()
+  picFormData.append("fileHash", picMd5)
   picFormData.append('file', file)
+  
   const res = await $request({
     url: "/video/upload",
     method: "post",
