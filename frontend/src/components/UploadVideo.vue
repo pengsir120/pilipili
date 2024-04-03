@@ -24,7 +24,7 @@
         <a-input disabled v-model:value="form.duration" />
       </a-form-item>
       <a-form-item label="上传视频">
-        <a-upload v-model:file-list="fileList" :customRequest="uploadVideo" @remove="uploadRemove" list-type="picture-card">
+        <a-upload v-model:file-list="fileList" :customRequest="uploadVideo" @remove="uploadRemove" list-type="picture-card" accept="video/*">
           <div v-if="fileList.length < 1">
             <PlusOutlined />
             <div style="margin-top: 8px">Upload</div>
@@ -32,7 +32,7 @@
         </a-upload>
       </a-form-item>
       <a-form-item label="上传封面">
-        <a-upload v-model:file-list="picFileList" :customRequest="uploadPic" @preview="previewVisible = true" list-type="picture-card">
+        <a-upload v-model:file-list="picFileList" :customRequest="uploadPic" @preview="previewVisible = true" list-type="picture-card" accept="image/*">
           <div v-if="picFileList.length < 1">
             <PlusOutlined />
             <div style="margin-top: 8px">Upload</div>
@@ -49,7 +49,7 @@
 <script setup>
 import { ref } from "vue"
 import { PlusOutlined } from '@ant-design/icons-vue';
-import { getVideoHash, captureFrame } from '@/utils/getVideoInfo'
+import { getVideoHash, captureFrame, getVideoDuration } from '@/utils/getVideoInfo'
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 
 const { $bus, $request } = userGetGlobalProperties()
@@ -112,44 +112,37 @@ const fileExist = async (file, fileHash) => {
 
 const uploadVideo = async ({file, onProgress, onSuccess}) => {
   const fileHash = await getVideoHash(file)
-  await fileExist(file, fileHash)
-  const video = document.createElement("video")
-  video.preload = 'metadata'
-  video.src = URL.createObjectURL(file)
-  video.onloadedmetadata = async () => {
-    // 视频时长
-    URL.revokeObjectURL(video.src)
-    // const duration = getVideoTime(video.duration)
-    // form.value.duration = duration
-    form.value.duration = video.duration
+  let { isFileExist, url } = await fileExist(file, fileHash)
+  
+  const duration = await getVideoDuration(file)
 
-    // 视频封面
-    if(picFileList.value.length == 0) {
-      const coverInfo = await captureFrame(file, Math.random() * video.duration)
-      const picMd5 = await getVideoHash(coverInfo.file)
-      const picFormData = new FormData()
-      picFormData.append("fileHash", picMd5)
-      picFormData.append('file', coverInfo.file)
-      const picRes = await $request({
-        url: "/file/upload",
-        method: "post",
-        data: picFormData,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      const picResUrl = picRes.data.url
-      form.value.cover = picResUrl
-      picFileList.value = [{
-        uid: -1,
-        name: coverInfo.name,
-        status: 'done',
-        url: picResUrl
-      }]
-      previewImage.value = picResUrl || coverInfo.url
-    }
-
-    
+  // 视频封面
+  if(picFileList.value.length == 0) {
+    const coverInfo = await captureFrame(file, Math.random() * duration)
+    const picMd5 = await getVideoHash(coverInfo.file)
+    const picFormData = new FormData()
+    picFormData.append("fileHash", picMd5)
+    picFormData.append('file', coverInfo.file)
+    const picRes = await $request({
+      url: "/file/upload",
+      method: "post",
+      data: picFormData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    const picResUrl = picRes.data.url
+    form.value.cover = picResUrl
+    picFileList.value = [{
+      uid: -1,
+      name: coverInfo.name,
+      status: 'done',
+      url: picResUrl
+    }]
+    previewImage.value = picResUrl || coverInfo.url
+  }
+  
+  if(!isFileExist) {
     const videoFormData = new FormData()
     videoFormData.append("file", file)
     videoFormData.append("fileHash", fileHash)
@@ -161,10 +154,12 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
         'Content-Type': 'multipart/form-data'
       }
     })
-    form.value.fileHash = fileHash
-    form.value.url = res.data.url
-    onSuccess()
+    url = res.data.url
   }
+
+  form.value.fileHash = fileHash
+  form.value.url = url
+  onSuccess()
 }
 
 const previewImage = ref('')

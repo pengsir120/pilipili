@@ -8,15 +8,15 @@ exports.exist = async (req, res) => {
   const {
     objectName
   } = req.query
-  let fileExist = true
+  let isFileExist = true
   try {
     await minioClient.statObject(bucketName, objectName)
   } catch (error) {
-    fileExist = false
+    isFileExist = false
   }
   res.status(200).json({
-    fileExist,
-    url: fileExist ? `http://127.0.0.1:9000/${bucketName}/${objectName}` : ''
+    isFileExist,
+    url: isFileExist ? `http://127.0.0.1:9000/${bucketName}/${objectName}` : ''
   })
 }
 

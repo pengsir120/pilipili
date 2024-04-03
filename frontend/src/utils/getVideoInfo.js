@@ -102,3 +102,16 @@ export function getVideoHash(videoFile) {
     }
   })
 }
+
+// 获取视频时长
+export function getVideoDuration(videoFile) {
+  const video = document.createElement("video")
+  video.preload = 'metadata'
+  video.src = URL.createObjectURL(videoFile)
+  return new Promise((resolve, reject) => {
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(video.src)
+      resolve(video.duration)
+    }
+  })
+}
