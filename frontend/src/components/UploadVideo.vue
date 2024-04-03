@@ -97,9 +97,22 @@ const handleOk = () => {
   
 }
 
-
+const fileExist = async (file, fileHash) => {
+  const mimeType = file.type.split('/')[1]
+  const objectName = `${fileHash}.${mimeType}`
+  const res = await $request({
+    url: "/file/exist",
+    method: "get",
+    params: {
+      objectName
+    }
+  })
+  return res.data
+}
 
 const uploadVideo = async ({file, onProgress, onSuccess}) => {
+  const fileHash = await getVideoHash(file)
+  await fileExist(file, fileHash)
   const video = document.createElement("video")
   video.preload = 'metadata'
   video.src = URL.createObjectURL(file)
@@ -118,7 +131,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
       picFormData.append("fileHash", picMd5)
       picFormData.append('file', coverInfo.file)
       const picRes = await $request({
-        url: "/video/upload",
+        url: "/file/upload",
         method: "post",
         data: picFormData,
         headers: {
@@ -136,19 +149,19 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
       previewImage.value = picResUrl || coverInfo.url
     }
 
-    const md5 = await getVideoHash(file)
+    
     const videoFormData = new FormData()
     videoFormData.append("file", file)
-    videoFormData.append("fileHash", md5)
+    videoFormData.append("fileHash", fileHash)
     const res = await $request({
-      url: "/video/upload",
+      url: "/file/upload",
       method: "post",
       data: videoFormData,
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     })
-    form.value.fileHash = md5
+    form.value.fileHash = fileHash
     form.value.url = res.data.url
     onSuccess()
   }
@@ -162,7 +175,7 @@ const uploadPic = async ({file, onProgress, onSuccess}) => {
   picFormData.append('file', file)
   
   const res = await $request({
-    url: "/video/upload",
+    url: "/file/upload",
     method: "post",
     data: picFormData,
     headers: {
@@ -173,6 +186,8 @@ const uploadPic = async ({file, onProgress, onSuccess}) => {
   form.value.cover = res.data.url
   onSuccess()
 }
+
+
 
 defineExpose({
   show

@@ -13,6 +13,7 @@ const fs = require('fs')
 const { resolve } = require('path')
 const { getVideoThumbPics, getVideoMetaData } = require('../utils/ffmpeg')
 const bucketName = 'test'
+const { performance } = require('perf_hooks');
 
 exports.getHots = async (req, res) => {
   // const { topnum } = req.params
@@ -276,9 +277,9 @@ exports.video = async (req, res) => {
     // const vodInfo = await getvodPlay(videoInfo.vodvideoId)
     // videoInfo.vod = vodInfo
     await Video.findByIdAndUpdate(videoId, { playCount: ++videoInfo.playCount }, { new: true })
-    const urlList = videoInfo.url.split("/")
-    const tagList = await minioClient.getObjectTagging(bucketName, urlList[urlList.length - 1])
-    if(tagList) {
+    if(videoInfo.thumbPreviewUrls.length == 0) {
+      const urlList = videoInfo.url.split("/")
+      const tagList = await minioClient.getObjectTagging(bucketName, urlList[urlList.length - 1])
       try {
         const thumbPreviewUrls = tagList[0].filter(item => item.Key.startsWith('thumbPreviewUrl')).map(item => item.Value)
         await Video.findByIdAndUpdate(videoId, { thumbPreviewUrls }, { new: true })
@@ -350,16 +351,26 @@ exports.updatevideo = async (req, res) => {
 exports.upload = async (req, res) => {
   const { buffer, mimetype, originalname } = req.file; // 获取上传文件
   const { fileHash } = req.body
-  console.log(fileHash);
   // const objectName = Buffer.from(originalname, 'latin1').toString('utf-8') // 设置对象名称
   const objectName = `${fileHash}.${mimetype.split('/')[1]}`
+  let isObjectExist = true
+  try {
+    const t1 = performance.now()
+    await minioClient.statObject(bucketName, objectName)
+    const t2 = performance.now()
+    console.log(t2 - t1);
+  } catch (error) {
+    isObjectExist = false
+  }
   // const data = await minioClient.putObject(bucketName, objectName, buffer, metaData ? JSON.parse(metaData) : undefined); // 上传到MinIO
-  await minioClient.putObject(bucketName, objectName, buffer); // 上传到MinIO
+  if(!isObjectExist) {
+    await minioClient.putObject(bucketName, objectName, buffer); // 上传到MinIO
+  }
   res.status(200).json({
     url: `http://127.0.0.1:9000/${bucketName}/${objectName}`
   })
   
-  if(mimetype.startsWith('video')) {
+  if(mimetype.startsWith('video') && !isObjectExist) {
     const tempDirPath = resolve(__dirname, '../temp')
     minioClient.fGetObject(bucketName, objectName, `${tempDirPath}/${objectName}`, (err, file) => {
       if (err) {
