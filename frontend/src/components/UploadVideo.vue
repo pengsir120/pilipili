@@ -157,6 +157,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
     url = res.data.url
   }
 
+  form.value.duration = duration
   form.value.fileHash = fileHash
   form.value.url = url
   onSuccess()

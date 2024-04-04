@@ -1,7 +1,7 @@
 const minioClient = require('../utils/minio')
 const fs = require('fs')
 const { resolve } = require('path')
-const { getVideoThumbPics, getVideoMetaData } = require('../utils/ffmpeg')
+const { getVideoThumbPicsAndMetaData } = require('../utils/ffmpeg')
 const bucketName = 'test'
 
 exports.exist = async (req, res) => {
@@ -45,11 +45,14 @@ exports.upload = async (req, res) => {
       if (err) {
         return console.log(err)
       }
-      getVideoThumbPics(objectName, 4).then(thumbPreviewUrls => {
+      getVideoThumbPicsAndMetaData(objectName, 4).then(res => {
         const tags = {}
-        thumbPreviewUrls.forEach((url, index) => {
+        res.thumbPreviewUrls.forEach((url, index) => {
           tags[`thumbPreviewUrl-${index}`] = url
         })
+        const { r_frame_rate, nb_frames } = res.metadata
+        tags['frameRate'] = r_frame_rate
+        tags['totalFrames'] = nb_frames
         minioClient.setObjectTagging(bucketName, objectName, tags)
         fs.unlink(`${tempDirPath}/${objectName}`, () => {})
       })

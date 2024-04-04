@@ -60,6 +60,14 @@ const videoSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  frameRate: {
+    type: String,
+    required: false
+  },
+  totalFrames: {
+    type: Number,
+    required: false
+  },
   ...baseModel,
 })
 

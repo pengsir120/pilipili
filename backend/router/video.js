@@ -24,5 +24,4 @@ router
   // .get('/getvod', verifyToken(), vodController.getvod)
   .put('/updatevideo/:videoId', verifyToken(), videoController.updatevideo)
   .post('/createvideo', verifyToken(), validator.video, videoController.createvideo)
-  .post('/upload', verifyToken(), upload.single('file'), videoController.upload)
 module.exports = router

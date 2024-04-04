@@ -32,6 +32,11 @@ const getVideoMetaData = async (filename) => {
       if(err) {
         reject(new Error(err))
       }else {
+        const { r_frame_rate, nb_frames } = metadata.streams[0]
+        minioClient.setObjectTagging(bucketName, filename, {
+          frameRate: r_frame_rate,
+          totalFrames: nb_frames
+        })
         resolve(metadata)
       }
     })
@@ -40,9 +45,10 @@ const getVideoMetaData = async (filename) => {
 
 module.exports.getVideoMetaData = getVideoMetaData
 
-module.exports.getVideoThumbPics = async (filename, timeStep) => {
+module.exports.getVideoThumbPicsAndMetaData = async (filename, timeStep) => {
   return new Promise(async(resolve, reject) => {
     const metadata = await getVideoMetaData(filename)
+    // 平均帧率 总帧数
     const { r_frame_rate, nb_frames } = metadata.streams[0]
     const fps = Number(r_frame_rate.slice(0, 2))
     let picNum = nb_frames / (fps * timeStep * 100)
@@ -53,6 +59,10 @@ module.exports.getVideoThumbPics = async (filename, timeStep) => {
     for(let i = 0; i < picNum; i++) {
       pList.push(getVideoThumbPic(filename, timeStep, fps, i))
     }
-    resolve(Promise.all(pList))
+    const thumbPreviewUrls = await Promise.all(pList)
+    resolve({
+      metadata: metadata.streams[0],
+      thumbPreviewUrls
+    })
   })
 }
