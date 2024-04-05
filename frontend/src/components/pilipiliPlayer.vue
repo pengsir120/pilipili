@@ -331,11 +331,9 @@ const indicatorPreview = ref('')
 const popupOffsetX = ref(0)
 const previewTime = ref('')
 const sourceImg = new Image()
-sourceImg.src = props.options.thumbPreviewUrls[0] || ''
 sourceImg.setAttribute("crossOrigin", "Anonymous")
 const handleProgressMove = (event) => {
   const rect = progressArea.value.getBoundingClientRect()
-  const { duration } = props.options
   indicator.value = event.clientX - rect.left
   if(indicator.value - 80 < 0) {
     popupOffsetX.value = 0
@@ -344,8 +342,22 @@ const handleProgressMove = (event) => {
   }else {
     popupOffsetX.value = indicator.value - 80
   }
-  previewTime.value = getVideoTime((event.clientX - rect.left)  / rect.width * duration)
-  indicatorPreview.value = getVideoThumb(sourceImg, Math.floor((event.clientX - rect.left)  / rect.width * duration * 24 / 100))
+
+  const { duration, thumbPreviewUrls, frameRate, totalFrames } = props.options
+  const fps = Number(frameRate.slice(0, 2))
+  const currentTime = indicator.value / rect.width * duration
+
+  let previewIdx = 0
+  while(currentTime * fps > fps * 4 * 100 * (previewIdx + 1)) {
+    previewIdx++
+  }
+  sourceImg.src = thumbPreviewUrls[previewIdx] || ''
+  previewTime.value = getVideoTime(currentTime)
+  if(previewIdx > 0) {
+    indicatorPreview.value = getVideoThumb(sourceImg, Math.floor((currentTime * fps - fps * 4 * 100 * previewIdx) / (fps * 4 * (previewIdx + 1))))
+  }else {
+    indicatorPreview.value = getVideoThumb(sourceImg, Math.floor(currentTime * fps / (fps * 4 * (previewIdx + 1))))
+  }
 }
 
 const handleProgressMouseenter = (event) => {
