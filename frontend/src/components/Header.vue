@@ -52,7 +52,7 @@
 
     <!-- 搜索框 -->
     <div class="flex-auto h-[38px]">
-      <div class="relative my-0 mx-auto min-w-[181px] max-w-[500px]">
+      <div v-click-outside="handleInpBlur" class="relative my-0 mx-auto min-w-[181px] max-w-[500px]">
         <form @submit.prevent class="flex items-center pr-12 pl-1 relative z-[1] overflow-hidden leading-[38px] border border-solid border-[#E3E5E7] h-10 rounded-lg bg-[#F1F2F3] opacity-90 transition-colors duration-300 hover:bg-white hover:opacity-100">
           <div class="flex justify-between items-center relative px-2 w-full h-8 border-2 border-solid border-transparent rounded-md">
             <input v-model="searchVal" @keyup.enter="handleSearch" type="text" @focus="handleInpFocus" class="flex-1 overflow-hidden pr-2 bg-transparent text-[#61666D] text-[14px] leading-5 outline-0">
@@ -64,7 +64,7 @@
             <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M16.3451 15.2003C16.6377 15.4915 16.4752 15.772 16.1934 16.0632C16.15 16.1279 16.0958 16.1818 16.0525 16.2249C15.7707 16.473 15.4456 16.624 15.1854 16.3652L11.6848 12.8815C10.4709 13.8198 8.97529 14.3267 7.44714 14.3267C3.62134 14.3267 0.5 11.2314 0.5 7.41337C0.5 3.60616 3.6105 0.5 7.44714 0.5C11.2729 0.5 14.3943 3.59538 14.3943 7.41337C14.3943 8.98802 13.8524 10.5087 12.8661 11.7383L16.3451 15.2003ZM2.13647 7.4026C2.13647 10.3146 4.52083 12.6766 7.43624 12.6766C10.3517 12.6766 12.736 10.3146 12.736 7.4026C12.736 4.49058 10.3517 2.1286 7.43624 2.1286C4.50999 2.1286 2.13647 4.50136 2.13647 7.4026Z" fill="currentColor"></path></svg>
           </div>
         </form>
-        <div class="hidden w-full min-w-[236px] max-h-[612px] overflow-y-auto absolute bg-white border border-solid border-[#e6e9ee] box-border shadow-[0_2px_4px_0_rgba(0,0,0,0.1)] rounded-sm py-4 mt-0.5 text-[#212121]">
+        <div :class="[inpFocus ? 'block' : 'hidden']" class="w-full min-w-[236px] max-h-[612px] overflow-y-auto absolute bg-white border border-solid border-[#e6e9ee] box-border shadow-[0_2px_4px_0_rgba(0,0,0,0.1)] rounded-sm py-4 mt-0.5 text-[#212121]">
           <div class="history box-border">
             <div class="flex items-center justify-between px-4 box-border">
               <div class="h-6 font-semibold text-[16px] leading-6">
@@ -76,9 +76,9 @@
             </div>
             <div class="max-h-[172px] px-4 overflow-hidden box-border">
               <div class="flex flex-wrap mt-3 mr-[-10px] mb-1 box-border">
-                <div class="relative box-border h-[30px] pt-[7px] pb-[8px] px-2.5 text-[12px] leading-[15px] bg-[#f4f4f4] rounded mr-2.5 mb-2.5 cursor-pointer group hover:text-theme-color">
+                <div v-for="item in historySearch" class="relative box-border h-[30px] pt-[7px] pb-[8px] px-2.5 text-[12px] leading-[15px] bg-[#f4f4f4] rounded mr-2.5 mb-2.5 cursor-pointer group hover:text-theme-color">
                   <div class="whitespace-nowrap overflow-hidden text-ellipsis max-w-24 box-border">
-                    哥斯拉大战金刚2
+                    {{item.value}}
                   </div>
                   <div class="group-hover:block hidden box-border absolute w-4 h-4 top-[-6px] right-[-6px] p-0.5">
                     <svg data-v-340b780a="" class="fill-[#cccccc]" viewBox="0 0 1024 1024" width="14" height="14">
@@ -305,9 +305,28 @@ const handleLogout = () => {
   vuexStore.commit('LOG_OUT')
 }
 
+const inpFocus = ref(false)
+const handleInpFocus = () => {
+  inpFocus.value = true
+}
+
+const handleInpBlur = () => {
+  inpFocus.value = false
+}
+
 const searchVal = ref('')
+const historySearch = ref([])
+historySearch.value = (JSON.parse(localStorage.getItem("search_history")) || []).sort((a, b) => a.timestamp - b.timestamp)
 const handleSearch = () => {
   $bus?.emit('getVideoList', {title: searchVal.value})
+  handleInpBlur()
+  if(value) {
+    historySearch.value.push({
+      value: searchVal.value,
+      timestamp: new Date().getTime()
+    })
+    localStorage.setItem("search_history", JSON.stringify(historySearch.value))
+  }
 }
 
 const router = useRouter()
@@ -323,9 +342,18 @@ const handleUploadVideo = () => {
   uploadVideo.value.show()
 }
 
-const historySearch = ref([])
-const inpFocus = ref(false)
-const handleInpFocus = () => {
-  inpFocus.value = true
+const vClickOutside = {
+  mounted(el, binding) {
+    const clickOutsideEvent = (event) => {
+      if (!el.contains(event.target)) {
+        binding.value();
+      }
+    };
+
+    document.addEventListener('mousedown', clickOutsideEvent);
+  },
+  unmounted(el) {
+    document.removeEventListener('mousedown', clickOutsideEvent);
+  },
 }
 </script>
