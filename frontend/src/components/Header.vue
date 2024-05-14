@@ -70,17 +70,17 @@
               <div class="h-6 font-semibold text-[16px] leading-6">
                 搜索历史
               </div>
-              <div class="text-[12px] leading-[15px] h-[15px] text-[#999999] cursor-pointer">
+              <div @click="historySearch = []" class="text-[12px] leading-[15px] h-[15px] text-[#999999] cursor-pointer">
                 清空
               </div>
             </div>
             <div class="max-h-[172px] px-4 overflow-hidden box-border">
               <div class="flex flex-wrap mt-3 mr-[-10px] mb-1 box-border">
-                <div v-for="item in historySearch" class="relative box-border h-[30px] pt-[7px] pb-[8px] px-2.5 text-[12px] leading-[15px] bg-[#f4f4f4] rounded mr-2.5 mb-2.5 cursor-pointer group hover:text-theme-color">
+                <div v-for="(item, index) in historySearch" class="relative box-border h-[30px] pt-[7px] pb-[8px] px-2.5 text-[12px] leading-[15px] bg-[#f4f4f4] rounded mr-2.5 mb-2.5 cursor-pointer group hover:text-theme-color">
                   <div class="whitespace-nowrap overflow-hidden text-ellipsis max-w-24 box-border">
                     {{item.value}}
                   </div>
-                  <div class="group-hover:block hidden box-border absolute w-4 h-4 top-[-6px] right-[-6px] p-0.5">
+                  <div @click="handleHistoryDel(index)" class="group-hover:block hidden box-border absolute w-4 h-4 top-[-6px] right-[-6px] p-0.5">
                     <svg data-v-340b780a="" class="fill-[#cccccc]" viewBox="0 0 1024 1024" width="14" height="14">
                       <path data-v-340b780a="" d="M512 64.303538c-247.25636 0-447.696462 200.440102-447.696462 447.696462
                         0 247.254314 200.440102 447.696462 447.696462 447.696462s447.696462-200.440102
@@ -255,7 +255,7 @@
 import Login from './login.vue'
 import useCommandComponent from '@/utils/useCommandComponent'
 import { useStore } from "vuex"
-import { ref, computed, defineProps, onMounted } from "vue"
+import { ref, computed, defineProps, onMounted, watch } from "vue"
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRouter, useRoute } from 'vue-router'
 import popover from './popover.vue'
@@ -316,18 +316,26 @@ const handleInpBlur = () => {
 
 const searchVal = ref('')
 const historySearch = ref([])
-historySearch.value = (JSON.parse(localStorage.getItem("search_history")) || []).sort((a, b) => a.timestamp - b.timestamp)
+historySearch.value = (JSON.parse(localStorage.getItem("search_history")) || []).sort((a, b) => b.timestamp - a.timestamp)
 const handleSearch = () => {
   $bus?.emit('getVideoList', {title: searchVal.value})
   handleInpBlur()
-  if(value) {
-    historySearch.value.push({
+  if(searchVal.value) {
+    historySearch.value.unshift({
       value: searchVal.value,
       timestamp: new Date().getTime()
     })
-    localStorage.setItem("search_history", JSON.stringify(historySearch.value))
   }
 }
+
+const handleHistoryDel = (index) => {
+  historySearch.value.splice(index, 1)
+}
+
+watch(historySearch, (newVal, oldVal) => {
+  console.log('change');
+  localStorage.setItem("search_history", JSON.stringify(newVal))
+}, { deep: true })
 
 const router = useRouter()
 const backHomePage = () => {
