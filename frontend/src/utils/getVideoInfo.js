@@ -1,4 +1,5 @@
 import SparkMD5 from 'spark-md5'
+export const CHUNK_SIZE = 1024 * 1024 * 100
 
 // 将视频时长(秒)转化为时分秒的形式
 export function getVideoTime(seconds) {
@@ -88,19 +89,58 @@ export function getVideoThumb(sourceImg, targetNum) {
 }
 
 // 获取视频哈希值
-export function getVideoHash(videoFile) {
-  const reader = new FileReader()
-  reader.readAsArrayBuffer(videoFile)
-  return new Promise((resolve, reject) => {
-    reader.onload = (e) => {
-      const spark = new SparkMD5.ArrayBuffer()
-      spark.append(e.target.result)
-      resolve(spark.end())
-    }
-    reader.onerror = (err) => {
-      reject(err)
-    }
-  })
+// export function getVideoHash(videoFile) {
+//   const reader = new FileReader()
+//   reader.readAsArrayBuffer(videoFile)
+//   return new Promise((resolve, reject) => {
+//     reader.onload = (e) => {
+//       const spark = new SparkMD5.ArrayBuffer()
+//       spark.append(e.target.result)
+//       resolve(spark.end())
+//     }
+//     reader.onerror = (err) => {
+//       reject(err)
+//     }
+//   })
+// }
+export async function getVideoHash(chunks, isMultiple = false) {
+  if(isMultiple) {
+    const spark = new SparkMD5.ArrayBuffer()
+    let count = 0, progress = 0
+    
+    return new Promise((resolve, reject) => {
+      const loadNext = index => {
+        const reader = new FileReader()
+        reader.readAsArrayBuffer(chunks[index].fileChunk)
+        reader.onload = e => {
+          count++
+          spark.append(e.target.result)
+          if(count === chunks.length) {
+            progress = 100
+            resolve(spark.end())
+          }else {
+            progress += 100 / chunks.length
+            console.log(progress);
+            loadNext(count)
+          }
+        }
+      }
+      loadNext(count)
+    })
+  }else {
+    const reader = new FileReader()
+    reader.readAsArrayBuffer(chunks)
+    return new Promise((resolve, reject) => {
+      reader.onload = (e) => {
+        const spark = new SparkMD5.ArrayBuffer()
+        spark.append(e.target.result)
+        resolve(spark.end())
+      }
+      reader.onerror = (err) => {
+        reject(err)
+      }
+    })
+  }
 }
 
 // 获取视频时长

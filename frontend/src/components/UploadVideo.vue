@@ -49,7 +49,7 @@
 <script setup>
 import { ref } from "vue"
 import { PlusOutlined } from '@ant-design/icons-vue';
-import { getVideoHash, captureFrame, getVideoDuration } from '@/utils/getVideoInfo'
+import { getVideoHash, captureFrame, getVideoDuration, CHUNK_SIZE } from '@/utils/getVideoInfo'
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 
 const { $bus, $request } = userGetGlobalProperties()
@@ -110,15 +110,39 @@ const fileExist = async (file, fileHash) => {
   return res.data
 }
 
+const createFileChunks = file => {
+  const chunks = []
+  if(file.size > CHUNK_SIZE * 10.24) {
+    const size = CHUNK_SIZE
+    let cur = 0
+    while (cur < file.size) {
+      chunks.push({
+        index: cur,
+        fileChunk: file.slice(cur, cur + size)
+      })
+      cur += size
+    }
+    return {
+      chunks,
+      isMultiple: true
+    }
+  }
+  return {
+    chunks: file,
+    isMultiple: false
+  }
+}
+
 const uploadVideo = async ({file, onProgress, onSuccess}) => {
-  const fileHash = await getVideoHash(file)
+  const { chunks, isMultiple } = createFileChunks(file)
+  const fileHash = await getVideoHash(chunks, isMultiple)
   let { isFileExist, url } = await fileExist(file, fileHash)
-  
   const duration = await getVideoDuration(file)
 
   // 视频封面
   if(picFileList.value.length == 0) {
     const coverInfo = await captureFrame(file, Math.random() * duration)
+    console.log(coverInfo);
     const picMd5 = await getVideoHash(coverInfo.file)
     const picFormData = new FormData()
     picFormData.append("fileHash", picMd5)
@@ -147,7 +171,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
     videoFormData.append("file", file)
     videoFormData.append("fileHash", fileHash)
     const res = await $request({
-      url: "/file/upload",
+      url: "/file/multipleUpload",
       method: "post",
       data: videoFormData,
       headers: {
