@@ -10,4 +10,5 @@ const upload = multer()
 router
   .get('/exist', verifyToken(), fileController.exist)
   .post('/upload', verifyToken(), upload.single('file'), fileController.upload)
+  .post('/multipleUpload', verifyToken(), fileController.multipleUpload)
 module.exports = router

@@ -3,6 +3,7 @@ const fs = require('fs')
 const { resolve } = require('path')
 const { getVideoThumbPicsAndMetaData } = require('../utils/ffmpeg')
 const bucketName = 'test'
+const multiparty = require("multiparty")
 
 exports.exist = async (req, res) => {
   const {
@@ -58,4 +59,21 @@ exports.upload = async (req, res) => {
       })
     })
   }
+}
+
+exports.multipleUpload = async(req, res) => {
+  const form = new multiparty.Form({
+    uploadDir: "uploads"
+  })
+  form.parse(req)
+  form.on("file", function (name, file) {
+    const {
+      path,
+      originalFilename
+    } = file
+    fs.renameSync(path, `uploads/${originalFilename}`)
+  })
+  res.status(200).json({
+    msg: '上传成功'
+  })
 }
