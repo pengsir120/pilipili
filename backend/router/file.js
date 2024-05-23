@@ -11,4 +11,5 @@ router
   .get('/exist', verifyToken(), fileController.exist)
   .post('/upload', verifyToken(), upload.single('file'), fileController.upload)
   .post('/multipleUpload', verifyToken(), fileController.multipleUpload)
+  .post('/merge', verifyToken(), fileController.merge)
 module.exports = router

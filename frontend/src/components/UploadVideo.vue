@@ -97,9 +97,7 @@ const handleOk = () => {
   
 }
 
-const fileExist = async (file, fileHash) => {
-  const mimeType = file.type.split('/')[1]
-  const objectName = `${fileHash}.${mimeType}`
+const fileExist = async (objectName) => {
   const res = await $request({
     url: "/file/exist",
     method: "get",
@@ -112,6 +110,7 @@ const fileExist = async (file, fileHash) => {
 
 const createFileChunks = file => {
   const chunks = []
+  // 大于1GB
   if(file.size > CHUNK_SIZE * 10.24) {
     const size = CHUNK_SIZE
     let cur = 0
@@ -134,9 +133,10 @@ const createFileChunks = file => {
 }
 
 const uploadVideo = async ({file, onProgress, onSuccess}) => {
+  const mimeType = file.type.split('/')[1]
   const { chunks, isMultiple } = createFileChunks(file)
   const fileHash = await getVideoHash(chunks, isMultiple)
-  let { isFileExist, url } = await fileExist(file, fileHash)
+  let { isFileExist, url } = await fileExist(`${fileHash}.${mimeType}`)
   const duration = await getVideoDuration(file)
 
   // 视频封面
@@ -167,18 +167,45 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
   }
   
   if(!isFileExist) {
-    const videoFormData = new FormData()
-    videoFormData.append("file", file)
-    videoFormData.append("fileHash", fileHash)
-    const res = await $request({
-      url: "/file/multipleUpload",
-      method: "post",
-      data: videoFormData,
-      headers: {
-        'Content-Type': 'multipart/form-data'
+    if(isMultiple) {
+      const promiseList = []
+      for(let i = 0; i < chunks.length; i++) {
+        const blobFile = new File([chunks[i].fileChunk], `${fileHash}-${i}`)
+        const formData = new FormData()
+        formData.append('file', blobFile)
+        const p = $request({
+          url: "/file/multipleUpload",
+          method: "post",
+          data: formData,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        promiseList.push(p)
       }
-    })
-    url = res.data.url
+      await Promise.all(promiseList)
+      await $request({
+        url: "/file/merge",
+        method: "post",
+        data: {
+          fileHash,
+          mimeType
+        }
+      })
+    }else {
+      const videoFormData = new FormData()
+      videoFormData.append("file", file)
+      videoFormData.append("fileHash", fileHash)
+      const res = await $request({
+        url: "/file/upload",
+        method: "post",
+        data: videoFormData,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      url = res.data.url
+    }
   }
 
   form.value.duration = duration

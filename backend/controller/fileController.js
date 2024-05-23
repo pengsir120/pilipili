@@ -26,16 +26,10 @@ exports.upload = async (req, res) => {
   const { fileHash } = req.body
   // const objectName = Buffer.from(originalname, 'latin1').toString('utf-8') // 设置对象名称
   const objectName = `${fileHash}.${mimetype.split('/')[1]}`
-  let isObjectExist = true
-  try {
-    await minioClient.statObject(bucketName, objectName)
-  } catch (error) {
-    isObjectExist = false
-  }
   // const data = await minioClient.putObject(bucketName, objectName, buffer, metaData ? JSON.parse(metaData) : undefined); // 上传到MinIO
-  if(!isObjectExist) {
-    await minioClient.putObject(bucketName, objectName, buffer); // 上传到MinIO
-  }
+
+  await minioClient.putObject(bucketName, objectName, buffer); // 上传到MinIO
+
   res.status(200).json({
     url: `http://127.0.0.1:9000/${bucketName}/${objectName}`
   })
@@ -63,7 +57,7 @@ exports.upload = async (req, res) => {
 
 exports.multipleUpload = async(req, res) => {
   const form = new multiparty.Form({
-    uploadDir: "uploads"
+    uploadDir: "temp"
   })
   form.parse(req)
   form.on("file", function (name, file) {
@@ -71,9 +65,43 @@ exports.multipleUpload = async(req, res) => {
       path,
       originalFilename
     } = file
-    fs.renameSync(path, `uploads/${originalFilename}`)
+    fs.renameSync(path, `temp/${originalFilename}`)
   })
   res.status(200).json({
     msg: '上传成功'
+  })
+}
+
+exports.merge = async(req, res) => {
+  const { fileHash, mimeType } = req.body
+  const targetFilePath = resolve(__dirname, `../temp/${fileHash}.${mimeType}`)
+  const readDir = fs.readdirSync(resolve(__dirname, '../temp'))
+  const chunkPaths = readDir.filter(chunk => chunk.startsWith(fileHash)).sort((a, b) => b.substring(fileHash.length) - a.substring(fileHash.length)).map(item => resolve(__dirname, `../temp/${item}`))
+
+  chunkPaths.map(chunkPath => {
+    fs.appendFileSync(
+      targetFilePath,
+      fs.readFileSync(chunkPath)
+    )
+    fs.rmSync(chunkPath)
+  })
+
+  const objectName = `${fileHash}.${mimeType}`
+  await minioClient.fPutObject(bucketName, objectName, targetFilePath); 
+
+  res.status(200).json({
+    msg: '合并成功'
+  })
+
+  getVideoThumbPicsAndMetaData(objectName, 4).then(res => {
+    const tags = {}
+    res.thumbPreviewUrls.forEach((url, index) => {
+      tags[`thumbPreviewUrl-${index}`] = url
+    })
+    const { r_frame_rate, nb_frames } = res.metadata
+    tags['frameRate'] = r_frame_rate
+    tags['totalFrames'] = nb_frames
+    minioClient.setObjectTagging(bucketName, objectName, tags)
+    fs.unlink(`${tempDirPath}/${objectName}`, () => {})
   })
 }
