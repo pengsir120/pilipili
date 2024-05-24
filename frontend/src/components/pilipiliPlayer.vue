@@ -355,8 +355,11 @@ const handleProgressMove = (event) => {
   previewTime.value = getVideoTime(currentTime)
   if(previewIdx > 0) {
     indicatorPreview.value = getVideoThumb(sourceImg, Math.floor((currentTime * fps - fps * 4 * 100 * previewIdx) / (fps * 4 * (previewIdx + 1))))
+    console.log(indicatorPreview.value);
   }else {
     indicatorPreview.value = getVideoThumb(sourceImg, Math.floor(currentTime * fps / (fps * 4 * (previewIdx + 1))))
+    console.log(Math.floor(currentTime * fps / (fps * 4 * (previewIdx + 1))));
+    console.log(indicatorPreview.value);
   }
 }
 

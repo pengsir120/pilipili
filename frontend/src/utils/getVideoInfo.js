@@ -1,5 +1,5 @@
 import SparkMD5 from 'spark-md5'
-export const CHUNK_SIZE = 1024 * 1024 * 100
+export const CHUNK_SIZE = 1024 * 1024
 
 // 将视频时长(秒)转化为时分秒的形式
 export function getVideoTime(seconds) {

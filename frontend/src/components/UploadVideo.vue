@@ -111,7 +111,7 @@ const fileExist = async (objectName) => {
 const createFileChunks = file => {
   const chunks = []
   // 大于1GB
-  if(file.size > CHUNK_SIZE * 10.24) {
+  if(file.size > CHUNK_SIZE * 300) {
     const size = CHUNK_SIZE
     let cur = 0
     while (cur < file.size) {
@@ -173,7 +173,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
         const blobFile = new File([chunks[i].fileChunk], `${fileHash}-${i}`)
         const formData = new FormData()
         formData.append('file', blobFile)
-        const p = $request({
+        await $request({
           url: "/file/multipleUpload",
           method: "post",
           data: formData,
@@ -181,10 +181,10 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
             'Content-Type': 'multipart/form-data'
           }
         })
-        promiseList.push(p)
+        // promiseList.push(p)
       }
-      await Promise.all(promiseList)
-      await $request({
+      // await Promise.all(promiseList)
+      const res = await $request({
         url: "/file/merge",
         method: "post",
         data: {
@@ -192,6 +192,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
           mimeType
         }
       })
+      url = res.data.url
     }else {
       const videoFormData = new FormData()
       videoFormData.append("file", file)

@@ -90,10 +90,12 @@ exports.merge = async(req, res) => {
   await minioClient.fPutObject(bucketName, objectName, targetFilePath); 
 
   res.status(200).json({
+    url: `http://127.0.0.1:9000/${bucketName}/${objectName}`,
     msg: '合并成功'
   })
 
   getVideoThumbPicsAndMetaData(objectName, 4).then(res => {
+    const tempDirPath = resolve(__dirname, '../temp')
     const tags = {}
     res.thumbPreviewUrls.forEach((url, index) => {
       tags[`thumbPreviewUrl-${index}`] = url
