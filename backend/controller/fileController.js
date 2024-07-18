@@ -55,6 +55,18 @@ exports.upload = async (req, res) => {
   }
 }
 
+exports.singleUpload = async (req, res) => {
+  const { buffer, mimetype, originalname } = req.file;
+  const { fileHash } = req.body
+  const objectName = `${fileHash}.${mimetype.split('/')[1]}`
+
+  await minioClient.putObject(bucketName, objectName, buffer); // 上传到MinIO
+
+  res.status(200).json({
+    url: `http://127.0.0.1:9000/${bucketName}/${objectName}`
+  })
+}
+
 exports.multipleUpload = async(req, res) => {
   const form = new multiparty.Form({
     uploadDir: "temp"

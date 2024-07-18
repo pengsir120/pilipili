@@ -252,14 +252,12 @@
 </template>
 
 <script setup>
-import Login from './login.vue'
+import Login from './Login.vue'
 import useCommandComponent from '@/utils/useCommandComponent'
 import { useStore } from "vuex"
 import { ref, computed, defineProps, onMounted, watch } from "vue"
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRouter, useRoute } from 'vue-router'
-import popover from './popover.vue'
-import { getVideoTime } from '@/utils/getVideoInfo'
 import UploadVideo from './UploadVideo.vue'
 
 defineProps({
@@ -360,8 +358,8 @@ const vClickOutside = {
 
     document.addEventListener('mousedown', clickOutsideEvent);
   },
-  unmounted(el) {
-    document.removeEventListener('mousedown', clickOutsideEvent);
-  },
+  //unmounted(el) {
+  //  document.removeEventListener('mousedown', clickOutsideEvent);
+  //},
 }
 </script>

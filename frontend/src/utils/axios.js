@@ -1,13 +1,13 @@
 import axios from 'axios'
 
 const service = axios.create({
-  baseURL: `${import.meta.env.VITE_APP_API_BASE}/api/v1`, // 域名配置
+  baseURL: `${import.meta.env.VITE_APP_API_BASE}`, // 域名配置
   timeout: 200000
 })
 
 // request拦截器
 service.interceptors.request.use((config) => {
-  config.headers['Authorization'] = sessionStorage.getItem('authorization') ? `Bearer ${sessionStorage.getItem('authorization')}` : ''
+  config.headers['Authorization'] = localStorage.getItem('authorization') ? `Bearer ${localStorage.getItem('authorization')}` : ''
   config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json'
   if(config.type == 'file') {
     config.headers['Content-Type'] = 'application/multipart/form-data'

@@ -84,7 +84,7 @@ const uploadRemove = () => {
 const handleOk = () => {
   formRef.value.validate().then(() => {
     $request({
-      url: '/video/createvideo',
+      url: '/api/v1/video/createvideo',
       method: 'POST',
       data: form.value
     }).then(res => {
@@ -99,7 +99,7 @@ const handleOk = () => {
 
 const fileExist = async (objectName) => {
   const res = await $request({
-    url: "/file/exist",
+    url: "/api/v1/file/exist",
     method: "get",
     params: {
       objectName
@@ -148,7 +148,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
     picFormData.append("fileHash", picMd5)
     picFormData.append('file', coverInfo.file)
     const picRes = await $request({
-      url: "/file/upload",
+      url: "/api/v1/file/upload",
       method: "post",
       data: picFormData,
       headers: {
@@ -174,7 +174,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
         const formData = new FormData()
         formData.append('file', blobFile)
         await $request({
-          url: "/file/multipleUpload",
+          url: "/api/v1/file/multipleUpload",
           method: "post",
           data: formData,
           headers: {
@@ -185,7 +185,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
       }
       // await Promise.all(promiseList)
       const res = await $request({
-        url: "/file/merge",
+        url: "/api/v1/file/merge",
         method: "post",
         data: {
           fileHash,
@@ -198,7 +198,7 @@ const uploadVideo = async ({file, onProgress, onSuccess}) => {
       videoFormData.append("file", file)
       videoFormData.append("fileHash", fileHash)
       const res = await $request({
-        url: "/file/upload",
+        url: "/api/v1/file/upload",
         method: "post",
         data: videoFormData,
         headers: {
@@ -223,7 +223,7 @@ const uploadPic = async ({file, onProgress, onSuccess}) => {
   picFormData.append('file', file)
   
   const res = await $request({
-    url: "/file/upload",
+    url: "/api/v1/file/upload",
     method: "post",
     data: picFormData,
     headers: {

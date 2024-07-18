@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import Item from './item.vue'
+import Item from './Item.vue'
 import { onMounted, ref } from 'vue'
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRouter } from 'vue-router'
@@ -15,7 +15,7 @@ const videoList = ref({})
 
 const getVideoList = (params = {}) => {
   $request({
-    url: '/video/videolist',
+    url: '/api/v1/video/videolist',
     params: {
       pageNum: 1,
       pageSize: 20,

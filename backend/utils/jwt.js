@@ -6,7 +6,7 @@ const verify = promisify(jwt.verify)
 
 module.exports.createToken = async (userInfo) => {
   const token = await tojwt(userInfo, uuid, {
-    expiresIn: 60 * 60 * 24
+    expiresIn: 60 * 60 * 24 * 7
   })
   return token
 }

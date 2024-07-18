@@ -151,7 +151,7 @@
       </div>
     </div>
 
-    <div class="relative w-[411px] ml-[30px] flex-none pointer-events-none hidden">
+    <div class="relative w-[411px] ml-[30px] flex-none pointer-events-none">
       <!-- up主信息 -->
       <div class="pointer-events-auto">
         <div class="h-[108px] box-border flex items-center">
@@ -186,7 +186,7 @@
               <div class="flex mt-[5px] whitespace-nowrap clear-both">
                 <div class="hover:bg-orange-100 transition-colors duration-300 bg-transparent border border-solid border-theme-color mr-3 shrink-0 w-[109px] text-theme-color box-border p-0 leading-[30px] h-[30px] rounded-md text-[14px] flex items-center justify-center cursor-pointer relative">
                   <div class="w-5 h-5 mr-1 flex">
-                    <img src="../assets/lightning.png" class="w-full h-full align-middle border-none" />
+                    <img src="@/assets/lightning.png" class="w-full h-full align-middle border-none" />
                   </div>
                   <span>充电</span>
                 </div>
@@ -245,8 +245,7 @@ import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRoute } from 'vue-router'
 import { onMounted, ref, onBeforeUnmount, computed } from 'vue'
 import { useStore } from "vuex"
-import Plyr from '@/components/plyr.vue'
-import PilipiliPlayer from '@/components/pilipiliPlayer.vue'
+import PilipiliPlayer from '@/components/PilipiliPlayer.vue'
 import { getVideoTime } from '@/utils/getVideoInfo.js'
 
 const { $request } = userGetGlobalProperties()
@@ -260,7 +259,7 @@ const videoDetail = ref({})
 const plyrOptions = ref(null)
 const getVideoDetail = () => {
   $request({
-    url: `/video/video/${route.query.videoId}`
+    url: `/api/v1/video/video/${route.query.videoId}`
   }).then(res => {
     videoDetail.value = {
       ...res.data,
@@ -281,7 +280,7 @@ const isFocus = ref(false)
 const content = ref('')
 const handleComment = () => {
   $request({
-    url: `/video/comment/${route.query.videoId}`,
+    url: `/api/v1/video/comment/${route.query.videoId}`,
     method: 'post',
     data: {
       content: content.value
@@ -297,7 +296,7 @@ const commentList = ref([])
 const commentCount = ref(0)
 const getCommentList = () => {
   $request({
-    url: `/video/commentlist/${route.query.videoId}`,
+    url: `/api/v1/video/commentlist/${route.query.videoId}`,
     params: {
       pageNum: 1,
       pageSize: 100
@@ -312,7 +311,7 @@ const videoList = ref({})
 
 const getVideoList = (params = {}) => {
   $request({
-    url: '/video/videolist',
+    url: '/api/v1/video/videolist',
     params: {
       pageNum: 1,
       pageSize: 20,
@@ -325,7 +324,7 @@ const getVideoList = (params = {}) => {
 
 const likeVideo = () => {
   $request({
-    url: `/video/like/${route.query.videoId}`
+    url: `/api/v1/video/like/${route.query.videoId}`
   }).then(res => {
     videoDetail.value = {
       ...res.data,

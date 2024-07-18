@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 config
-uploads
+temp
 *.local
 *.mp4
 
