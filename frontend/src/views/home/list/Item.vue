@@ -73,10 +73,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { getVideoTime } from '@/utils/getVideoInfo.js'
+import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 
-defineProps({
-  data: Object,
-});
+interface IVideoInfo {
+  cover: string,
+  playCount: number,
+  commentCount: number,
+  title: string,
+  updateAt: string,
+  duration: number,
+  user: {
+    username: string
+  }
+}
+
+defineProps<{
+  data: IVideoInfo
+}>()
+
+const { $moment } = userGetGlobalProperties()
 </script>

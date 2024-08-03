@@ -4,14 +4,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Item from './Item.vue'
 import { onMounted, ref } from 'vue'
 import userGetGlobalProperties from '@/utils/userGetGlobalProperties'
 import { useRouter } from 'vue-router'
 
 const { $request, $bus } = userGetGlobalProperties()
-const videoList = ref({})
+const videoList = ref([])
 
 const getVideoList = (params = {}) => {
   $request({

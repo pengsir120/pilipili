@@ -4,6 +4,7 @@ const { resolve } = require('path')
 const { getVideoThumbPicsAndMetaData } = require('../utils/ffmpeg')
 const bucketName = 'test'
 const multiparty = require("multiparty")
+const { Worker } = require('worker_threads')
 
 exports.exist = async (req, res) => {
   const {
@@ -34,12 +35,23 @@ exports.upload = async (req, res) => {
     url: `http://127.0.0.1:9000/${bucketName}/${objectName}`
   })
   
-  if(mimetype.startsWith('video') && !isObjectExist) {
+  if(mimetype.startsWith('video')) {
     const tempDirPath = resolve(__dirname, '../temp')
-    minioClient.fGetObject(bucketName, objectName, `${tempDirPath}/${objectName}`, (err, file) => {
+    minioClient.fGetObject(bucketName, objectName, `${tempDirPath}/${objectName}`, async (err, file) => {
       if (err) {
         return console.log(err)
       }
+      // const worker = new Worker(resolve(__dirname, '../utils/worker.js'), {
+      //   workerData: {
+      //     objectName,
+      //     tempDirPath
+      //   }
+      // })
+      // new Promise((resolve, reject) => {
+      //   worker.on('message', data => {
+      //     resolve(data)
+      //   })
+      // })
       getVideoThumbPicsAndMetaData(objectName, 4).then(res => {
         const tags = {}
         res.thumbPreviewUrls.forEach((url, index) => {

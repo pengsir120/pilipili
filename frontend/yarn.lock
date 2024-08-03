@@ -489,7 +489,7 @@ concat-map@0.0.1:
   resolved "http://219.135.209.147:4873/concat-map/-/concat-map-0.0.1.tgz"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
-core-js@^3.15.1, core-js@^3.26.1:
+core-js@^3.15.1:
   version "3.33.2"
   resolved "https://registry.npmjs.org/core-js/-/core-js-3.33.2.tgz"
   integrity sha512-XeBzWI6QL3nJQiHmdzbAOiMYqjrb7hwU7A39Qhvd/POSa/t9E1AeZyEZx3fNvp/vtM8zXwhoL0FsiS0hD0pruQ==
@@ -503,11 +503,6 @@ csstype@^3.1.1:
   version "3.1.2"
   resolved "http://219.135.209.147:4873/csstype/-/csstype-3.1.2.tgz"
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
-
-custom-event-polyfill@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.npmjs.org/custom-event-polyfill/-/custom-event-polyfill-1.0.7.tgz"
-  integrity sha512-TDDkd5DkaZxZFM8p+1I3yAlvM3rSr1wbrOliG4yJiwinMZN8z/iGL7BTlDkrJcYTmgUSb4ywVCc3ZaUtOtC76w==
 
 dayjs@^1.10.5:
   version "1.11.10"
@@ -741,11 +736,6 @@ lines-and-columns@^1.1.6:
   resolved "http://219.135.209.147:4873/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha1-7KKE910pZQeTCdwK2SVauy68FjI=
 
-loadjs@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.npmjs.org/loadjs/-/loadjs-4.2.0.tgz"
-  integrity sha512-AgQGZisAlTPbTEzrHPb6q+NYBMD+DP9uvGSIjSUM5uG+0jG15cb8axWpxuOIqrmQjn6scaaH8JwloiP27b2KXA==
-
 lodash-es@^4.17.15:
   version "4.17.21"
   resolved "https://mirrors.cloud.tencent.com/npm/lodash-es/-/lodash-es-4.17.21.tgz"
@@ -893,17 +883,6 @@ pirates@^4.0.1:
   resolved "http://219.135.209.147:4873/pirates/-/pirates-4.0.6.tgz"
   integrity sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==
 
-plyr@^3.7.8:
-  version "3.7.8"
-  resolved "https://registry.npmjs.org/plyr/-/plyr-3.7.8.tgz"
-  integrity sha512-yG/EHDobwbB/uP+4Bm6eUpJ93f8xxHjjk2dYcD1Oqpe1EcuQl5tzzw9Oq+uVAzd2lkM11qZfydSiyIpiB8pgdA==
-  dependencies:
-    core-js "^3.26.1"
-    custom-event-polyfill "^1.0.7"
-    loadjs "^4.2.0"
-    rangetouch "^2.0.1"
-    url-polyfill "^1.1.12"
-
 postcss-import@^15.1.0:
   version "15.1.0"
   resolved "http://219.135.209.147:4873/postcss-import/-/postcss-import-15.1.0.tgz"
@@ -966,11 +945,6 @@ queue-microtask@^1.2.2:
   version "1.2.3"
   resolved "http://219.135.209.147:4873/queue-microtask/-/queue-microtask-1.2.3.tgz"
   integrity sha1-SSkii7xyTfrEPg77BYyve2z7YkM=
-
-rangetouch@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/rangetouch/-/rangetouch-2.0.1.tgz"
-  integrity sha512-sln+pNSc8NGaHoLzwNBssFSf/rSYkqeBXzX1AtJlkJiUaVSJSbRAWJk+4omsXkN+EJalzkZhWQ3th1m0FpR5xA==
 
 read-cache@^1.0.0:
   version "1.0.0"
@@ -1133,6 +1107,11 @@ ts-interface-checker@^0.1.9:
   resolved "http://219.135.209.147:4873/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz"
   integrity sha1-eE/T1nlyK8EDsbS4AwvN212yppk=
 
+typescript@^5.5.4:
+  version "5.5.4"
+  resolved "https://registry.npmmirror.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
+  integrity sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==
+
 update-browserslist-db@^1.0.11:
   version "1.0.13"
   resolved "http://219.135.209.147:4873/update-browserslist-db/-/update-browserslist-db-1.0.13.tgz"
@@ -1140,11 +1119,6 @@ update-browserslist-db@^1.0.11:
   dependencies:
     escalade "^3.1.1"
     picocolors "^1.0.0"
-
-url-polyfill@^1.1.12:
-  version "1.1.12"
-  resolved "https://registry.npmjs.org/url-polyfill/-/url-polyfill-1.1.12.tgz"
-  integrity sha512-mYFmBHCapZjtcNHW0MDq9967t+z4Dmg5CJ0KqysK3+ZbyoNOWQHksGCTWwDhxGXllkWlOc10Xfko6v4a3ucM6A==
 
 util-deprecate@^1.0.2:
   version "1.0.2"
